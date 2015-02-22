@@ -1,0 +1,75 @@
+<?xml version="1.0" ?><svg height="23.28333mm" version="1.0" viewBox="0 0 89 88" width="23.54792mm" xmlns="http://www.w3.org/2000/svg">
+  <g font-family="Helvetica" font-size="12pt" stroke-linecap="round" transform="translate(-132,-231)">
+    <g stroke="#000000" stroke-width="1.0">
+      <line x1="163.549456123" x2="190.0" y1="243.0" y2="243.0"/>
+    </g>
+    <g stroke="#000000" stroke-width="1.0">
+      <line x1="208.700534521" x2="190.0" y1="288.151078397" y2="306.851612918"/>
+    </g>
+    <g stroke="#000000" stroke-width="1.0">
+      <line x1="208.700534521" x2="208.700534521" y1="261.700534521" y2="288.151078397"/>
+      <line x1="202.700534521" x2="202.700534521" y1="265.006852505" y2="284.844760413"/>
+    </g>
+    <g stroke="#000000" stroke-width="1.0">
+      <line x1="190.0" x2="163.549456123" y1="306.851612918" y2="306.851612918"/>
+    </g>
+    <g stroke="#000000" stroke-width="1.0">
+      <line x1="163.549456123" x2="144.848921603" y1="306.851612918" y2="288.151078397"/>
+    </g>
+    <g stroke="#000000" stroke-width="1.0">
+      <line x1="144.848921603" x2="144.848921603" y1="288.151078397" y2="261.700534521"/>
+      <line x1="150.848921603" x2="150.848921603" y1="284.844760413" y2="265.006852505"/>
+    </g>
+    <g stroke="#000000" stroke-width="1.0">
+      <line x1="144.848921603" x2="163.549456123" y1="261.700534521" y2="243.0"/>
+    </g>
+    <g stroke="#000000" stroke-width="1.0">
+      <line x1="190.0" x2="208.700534521" y1="243.0" y2="261.700534521"/>
+    </g>
+  </g>
+  <cdml version="0.15" xmlns="http://www.freesoftware.fsf.org/bkchem/cdml">
+    <info>
+      <author_program version="0.12.0_pre1">BKchem</author_program>
+    </info>
+    <paper crop_margin="10" crop_svg="1" orientation="portrait" replace_minus="0" type="A4" use_real_minus="0"/>
+    <viewport viewport="0.000000 0.000000 640.000000 480.000000"/>
+    <standard area_color="" font_family="helvetica" font_size="12" line_color="#000" line_width="1.0px" paper_crop_margin="10" paper_crop_svg="1" paper_orientation="portrait" paper_type="A4">
+      <bond double-ratio="0.75" length="0.7cm" wedge-width="5.0px" width="6.0px"/>
+      <arrow length="1.6cm"/>
+    </standard>
+    <molecule id="molecule22337" name="">
+      <atom id="atom44723" name="C" valency="4">
+        <point x="5.027cm" y="6.429cm"/>
+      </atom>
+      <atom id="atom60346" name="C" valency="4">
+        <point x="5.522cm" y="6.924cm"/>
+      </atom>
+      <atom id="atom46128" name="C" valency="4">
+        <point x="5.522cm" y="7.624cm"/>
+      </atom>
+      <atom id="atom49534" name="C" valency="4">
+        <point x="5.027cm" y="8.119cm"/>
+      </atom>
+      <atom id="atom35805" name="C" valency="4">
+        <point x="4.327cm" y="8.119cm"/>
+      </atom>
+      <atom id="atom36974" name="C" valency="4">
+        <point x="3.832cm" y="7.624cm"/>
+      </atom>
+      <atom id="atom38573" name="C" valency="4">
+        <point x="3.832cm" y="6.924cm"/>
+      </atom>
+      <atom id="atom9810" name="C" valency="4">
+        <point x="4.327cm" y="6.429cm"/>
+      </atom>
+      <bond double_ratio="0.75" end="atom44723" id="bond83084" line_width="1.0" start="atom9810" type="n1"/>
+      <bond double_ratio="0.75" end="atom49534" id="bond18809" line_width="1.0" start="atom46128" type="n1"/>
+      <bond bond_width="-6.0" center="no" double_ratio="0.75" end="atom46128" id="bond46016" line_width="1.0" start="atom60346" type="n2"/>
+      <bond double_ratio="0.75" end="atom35805" id="bond75185" line_width="1.0" start="atom49534" type="n1"/>
+      <bond double_ratio="0.75" end="atom36974" id="bond83530" line_width="1.0" start="atom35805" type="n1"/>
+      <bond bond_width="-6.0" center="no" double_ratio="0.75" end="atom38573" id="bond3407" line_width="1.0" start="atom36974" type="n2"/>
+      <bond double_ratio="0.75" end="atom9810" id="bond71271" line_width="1.0" start="atom38573" type="n1"/>
+      <bond double_ratio="0.75" end="atom60346" id="bond91213" line_width="1.0" start="atom44723" type="n1"/>
+    </molecule>
+  </cdml>
+</svg>

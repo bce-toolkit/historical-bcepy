@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:cdml="http://www.freesoftware.fsf.org/bkchem/cdml"
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   height="43.13770mm"
+   version="1.0"
+   viewBox="0 0 279 163"
+   width="73.83691mm"
+   id="svg4198"
+   inkscape:version="0.48.1 "
+   sodipodi:docname="LAH.svg">
+  <metadata
+     id="metadata4246">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs4244" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="640"
+     inkscape:window-height="480"
+     id="namedview4242"
+     showgrid="false"
+     inkscape:zoom="1.7206399"
+     inkscape:cx="130.81342"
+     inkscape:cy="76.425056"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg4198" />
+  <g
+     font-family="Helvetica"
+     font-size="12pt"
+     stroke-linecap="round"
+     transform="translate(-255,-199)"
+     id="g4200">
+    <g
+       stroke="#000000"
+       stroke-linecap="butt"
+       stroke-width="2.26715867159"
+       id="g4202">
+      <path
+         style=""
+         d="m 383,314.92001 19,-10.97"
+         id="line4204" />
+    </g>
+    <g
+       stroke="#000000"
+       stroke-linecap="butt"
+       stroke-width="2.26715867159"
+       id="g4206">
+      <path
+         style=""
+         d="m 434,307.63 13,7.51001"
+         id="line4208" />
+    </g>
+    <g
+       stroke="#000000"
+       stroke-linecap="butt"
+       stroke-width="1.0"
+       id="g4210">
+      <path
+         style="fill:#000000;stroke:#000000"
+         d="m 403.12,278.57 -10.05,-12.87 5.89,-3.4 6.12,15.13 z"
+         id="polygon4212" />
+    </g>
+    <g
+       stroke="#000000"
+       stroke-linecap="butt"
+       stroke-width="2.26715867159"
+       id="g4214">
+      <path
+         style=""
+         d="M 424.54001,277.42999 426.5,278.57001"
+         id="line4216" />
+      <path
+         style=""
+         d="m 427.60001,269.87 3.92999,2.26"
+         id="line4218" />
+      <path
+         style=""
+         d="m 430.66,262.29999 5.88999,3.40002"
+         id="line4220" />
+    </g>
+    <g
+       style="font-size:30px;fill:#000000;font-family:helvetica"
+       id="text4222">
+      <path
+         d="m 403.25604,303.54999 8.24707,-21.47461 3.06153,0 8.78906,21.47461 -3.23731,0 -2.50488,-6.50391 -8.97949,0 -2.3584,6.50391 z m 6.19629,-8.81836 7.28027,0 -2.24121,-5.94727 c -0.6836,-1.80662 -1.19141,-3.29099 -1.52343,-4.45312 -0.27345,1.37697 -0.65919,2.74415 -1.15723,4.10156 z"
+         style="font-size:30px;fill:#000000;font-family:helvetica"
+         id="path4255" />
+      <path
+         d="m 425.258,303.54999 0,-21.47461 2.63671,0 0,21.47461 z"
+         style="font-size:30px;fill:#000000;font-family:helvetica"
+         id="path4257" />
+    </g>
+    <g
+       style="font-size:30px;fill:#000000;font-family:helvetica"
+       id="text4224">
+      <path
+         d="m 431.70233,257.73999 0,-21.47461 2.8418,0 0,8.81836 11.16211,0 0,-8.81836 2.84179,0 0,21.47461 -2.84179,0 0,-10.12207 -11.16211,0 0,10.12207 z"
+         style="font-size:30px;fill:#000000;font-family:helvetica"
+         id="path4260" />
+    </g>
+    <g
+       style="font-size:30px;fill:#000000;font-family:helvetica"
+       id="text4226">
+      <path
+         d="m 450.70233,330 0,-21.47461 2.8418,0 0,8.81836 11.16211,0 0,-8.81836 2.84179,0 0,21.47461 -2.84179,0 0,-10.12207 -11.16211,0 0,10.12207 z"
+         style="font-size:30px;fill:#000000;font-family:helvetica"
+         id="path4263" />
+    </g>
+    <g
+       style="font-size:30px;fill:#000000;font-family:helvetica"
+       id="text4228">
+      <path
+         d="m 359.70233,330 0,-21.47461 2.8418,0 0,8.81836 11.16211,0 0,-8.81836 2.84179,0 0,21.47461 -2.84179,0 0,-10.12207 -11.16211,0 0,10.12207 z"
+         style="font-size:30px;fill:#000000;font-family:helvetica"
+         id="path4266" />
+    </g>
+    <g
+       style="font-size:30px;fill:#000000;font-family:helvetica"
+       id="text4230">
+      <path
+         d="m 378.70233,257.73999 0,-21.47461 2.8418,0 0,8.81836 11.16211,0 0,-8.81836 2.84179,0 0,21.47461 -2.84179,0 0,-10.12207 -11.16211,0 0,10.12207 z"
+         style="font-size:30px;fill:#000000;font-family:helvetica"
+         id="path4269" />
+    </g>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:2.26715875"
+       d="m 340.78,219 -10.78,0 0,135 10.78,0"
+       id="polyline4232" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:2.26715875"
+       d="m 487.22,219 10.78,0 0,135 -10.78,0"
+       id="polyline4234" />
+    <g
+       style="font-size:30px;fill:#000000;font-family:helvetica"
+       id="text4236">
+      <path
+         d="m 517.95215,225.55469 0,-2.65137 8.10058,0 0,2.65137 z"
+         style="font-size:30px;fill:#000000;font-family:helvetica"
+         id="path4274" />
+    </g>
+    <g
+       style="font-size:30px;fill:#000000;font-family:helvetica"
+       id="text4238">
+      <path
+         d="m 265.19727,296 0,-21.47461 2.84179,0 0,18.94043 10.57617,0 0,2.53418 z"
+         style="font-size:30px;fill:#000000;font-family:helvetica"
+         id="path4277" />
+      <path
+         d="m 281.69141,277.55762 0,-3.03223 2.63671,0 0,3.03223 z m 0,18.44238 0,-15.55664 2.63671,0 0,15.55664 z"
+         style="font-size:30px;fill:#000000;font-family:helvetica"
+         id="path4279" />
+      <path
+         d="m 292.01489,281.39624 0,-4.4165 -4.38354,0 0,-1.84571 4.38354,0 0,-4.38354 1.86768,0 0,4.38354 4.38354,0 0,1.84571 -4.38354,0 0,4.4165 z"
+         style="font-size:75%;baseline-shift:super"
+         id="path4281" />
+    </g>
+  </g>
+  <cdml:cdml
+     version="0.15">
+    <cdml:info>
+      <cdml:author_program
+         version="0.13.0">BKchem</cdml:author_program>
+    </cdml:info>
+    <cdml:paper
+       crop_margin="5"
+       crop_svg="1"
+       orientation="portrait"
+       replace_minus="0"
+       type="Legal"
+       use_real_minus="0" />
+    <cdml:viewport
+       viewport="0.000000 0.000000 640.000000 480.000000" />
+    <cdml:standard
+       area_color=""
+       font_family="helvetica"
+       font_size="24"
+       line_color="#000"
+       line_width="0.06cm"
+       paper_crop_margin="5"
+       paper_crop_svg="1"
+       paper_orientation="portrait"
+       paper_type="Legal">
+      <cdml:bond
+         double-ratio="0.85"
+         length="1.4cm"
+         wedge-width="0.18cm"
+         width="0.21cm" />
+      <cdml:arrow
+         length="1.6cm" />
+      <cdml:atom
+         show_hydrogens="0" />
+    </cdml:standard>
+    <cdml:molecule
+       id="molecule28843"
+       name="">
+      <cdml:atom
+         id="atom43236"
+         name="Al"
+         pos="center-first"
+         valency="3">
+        <cdml:point
+           x="10.978cm"
+           y="7.848cm" />
+      </cdml:atom>
+      <cdml:atom
+         id="atom41400"
+         name="H"
+         pos="center-first"
+         valency="1">
+        <cdml:point
+           x="11.678cm"
+           y="6.636cm" />
+      </cdml:atom>
+      <cdml:atom
+         id="atom3920"
+         name="H"
+         pos="center-first"
+         valency="1">
+        <cdml:point
+           x="12.190cm"
+           y="8.548cm" />
+      </cdml:atom>
+      <cdml:atom
+         id="atom58784"
+         name="H"
+         pos="center-first"
+         valency="1">
+        <cdml:point
+           x="9.766cm"
+           y="8.548cm" />
+      </cdml:atom>
+      <cdml:atom
+         id="atom35017"
+         name="H"
+         pos="center-first"
+         valency="1">
+        <cdml:point
+           x="10.278cm"
+           y="6.636cm" />
+      </cdml:atom>
+      <cdml:bond
+         double_ratio="0.85"
+         end="atom43236"
+         id="bond9800"
+         line_width="2.26715867159"
+         start="atom58784"
+         type="n1" />
+      <cdml:bond
+         double_ratio="0.85"
+         end="atom3920"
+         id="bond85564"
+         line_width="2.26715867159"
+         start="atom43236"
+         type="n1" />
+      <cdml:bond
+         double_ratio="0.85"
+         end="atom35017"
+         id="bond329"
+         line_width="2.26715867159"
+         start="atom43236"
+         type="w1"
+         wedge_width="6.80147601476" />
+      <cdml:bond
+         double_ratio="0.85"
+         end="atom41400"
+         id="bond48817"
+         line_width="2.26715867159"
+         start="atom43236"
+         type="h1"
+         wedge_width="6.80147601476" />
+    </cdml:molecule>
+    <cdml:polyline
+       line_color="#000"
+       width="2.26715867159">
+      <cdml:point
+         x="9.019cm"
+         y="5.796cm" />
+      <cdml:point
+         x="8.733cm"
+         y="5.796cm" />
+      <cdml:point
+         x="8.733cm"
+         y="9.369cm" />
+      <cdml:point
+         x="9.019cm"
+         y="9.369cm" />
+    </cdml:polyline>
+    <cdml:polyline
+       line_color="#000"
+       width="2.26715867159">
+      <cdml:point
+         x="12.894cm"
+         y="5.796cm" />
+      <cdml:point
+         x="13.179cm"
+         y="5.796cm" />
+      <cdml:point
+         x="13.179cm"
+         y="9.369cm" />
+      <cdml:point
+         x="12.894cm"
+         y="9.369cm" />
+    </cdml:polyline>
+    <cdml:text
+       id="text4637">
+      <cdml:point
+         x="13.788cm"
+         y="5.902cm" />
+      <cdml:ftext>-</cdml:ftext>
+    </cdml:text>
+    <cdml:text
+       id="text83959">
+      <cdml:point
+         x="7.172cm"
+         y="7.595cm" />
+      <cdml:ftext>Li<cdml:sup>+</cdml:sup>
+</cdml:ftext>
+    </cdml:text>
+  </cdml:cdml>
+</svg>

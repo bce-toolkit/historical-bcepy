@@ -1,0 +1,18 @@
+#!/usr/bin/env python
+#
+#  Copyright 2014 The BCE Authors. All rights reserved.
+#  Use of this source code is governed by a BSD-style license that can be
+#  found in the license.txt file.
+#
+
+PE_ML_UNRECOGNIZED_TOKEN = 8700
+PE_ML_NO_CONTENT = 8701
+PE_ML_EXCESSIVE_LEADING_ZERO = 8702
+PE_ML_PARENTHESIS_MISMATCH = 8703
+PE_ML_UNEXPECTED_TOKEN = 8704
+PE_ML_UNSUPPORTED_ABBREVIATION = 8705
+PE_ML_EMPTY_MOLECULE = 8706
+PE_ML_ILLEGAL_PREFIX = 8707
+PE_ML_ILLEGAL_SUFFIX = 8708
+PE_ML_NO_DATA = 8709
+PE_ML_CONFLICTED_STATUS = 8710

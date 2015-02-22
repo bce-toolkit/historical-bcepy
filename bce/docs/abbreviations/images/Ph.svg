@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:cdml="http://www.freesoftware.fsf.org/bkchem/cdml"
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   height="36.54844mm"
+   version="1.0"
+   viewBox="0 0 164 138"
+   width="43.43438mm"
+   id="svg3329"
+   inkscape:version="0.48.0 r9654"
+   sodipodi:docname="phenyl.svg">
+  <metadata
+     id="metadata3373">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs3371" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="640"
+     inkscape:window-height="480"
+     id="namedview3369"
+     showgrid="false"
+     inkscape:zoom="2.0308512"
+     inkscape:cx="76.950676"
+     inkscape:cy="64.751175"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg3329" />
+  <g
+     font-family="Helvetica"
+     font-size="12pt"
+     stroke-linecap="round"
+     transform="translate(-250,-107)"
+     id="g3331">
+    <g
+       stroke="#000000"
+       stroke-width="2.26548672566"
+       id="g3333">
+      <path
+         style=""
+         d="M 360.23001,115.56 406,142"
+         id="line3335" />
+      <path
+         style=""
+         d="m 359.69,124.4 38.91001,22.48"
+         id="line3337" />
+    </g>
+    <g
+       stroke="#000000"
+       stroke-width="2.26548672566"
+       id="g3339">
+      <path
+         style=""
+         d="m 406,142 0,52.78999"
+         id="line3341" />
+    </g>
+    <g
+       stroke="#000000"
+       stroke-width="2.26548672566"
+       id="g3343">
+      <path
+         style=""
+         d="m 314.45999,142 45.77002,-26.44"
+         id="line3345" />
+    </g>
+    <g
+       stroke="#000000"
+       stroke-width="2.26548672566"
+       id="g3347">
+      <path
+         style=""
+         d="M 314.45999,194.78999 282,213.52"
+         id="line3349" />
+    </g>
+    <g
+       stroke="#000000"
+       stroke-width="2.26548672566"
+       id="g3351">
+      <path
+         style=""
+         d="m 314.45999,142 0,52.78999"
+         id="line3353" />
+      <path
+         style=""
+         d="m 322.39001,145.96001 0,44.86999"
+         id="line3355" />
+    </g>
+    <g
+       stroke="#000000"
+       stroke-width="2.26548672566"
+       id="g3357">
+      <path
+         style=""
+         d="M 314.45999,194.78999 360.23001,221.23"
+         id="line3359" />
+    </g>
+    <g
+       stroke="#000000"
+       stroke-width="2.26548672566"
+       id="g3361">
+      <path
+         style=""
+         d="M 406,194.78999 360.23001,221.23"
+         id="line3363" />
+      <path
+         style=""
+         d="M 398.60001,189.89999 359.69,212.38"
+         id="line3365" />
+    </g>
+    <g
+       style="font-size:30px;fill:#000000;font-family:helvetica"
+       id="text3367">
+      <path
+         d="m 258.65839,228.22 0,-21.47461 9.52148,0 c 1.91405,2e-5 3.36913,0.19289 4.36523,0.57862 0.99608,0.38576 1.79198,1.06691 2.3877,2.04345 0.59568,0.97658 0.89354,2.05568 0.89355,3.23731 -10e-6,1.52345 -0.49318,2.80763 -1.47949,3.85254 -0.98634,1.04493 -2.50978,1.70899 -4.57031,1.99218 0.75194,0.36134 1.32323,0.71779 1.71387,1.06934 0.83006,0.76173 1.61619,1.71387 2.3584,2.85644 l 3.73535,5.84473 -3.57422,0 -2.8418,-4.46777 c -0.83009,-1.28906 -1.51368,-2.27539 -2.05078,-2.95899 -0.53712,-0.68358 -1.01808,-1.1621 -1.44287,-1.43554 -0.42482,-0.27343 -0.85694,-0.46386 -1.29639,-0.57129 -0.32227,-0.0683 -0.84962,-0.10253 -1.58203,-0.10254 l -3.2959,0 0,9.53613 z m 2.84179,-11.99707 6.1084,0 c 1.29882,1e-5 2.31444,-0.13426 3.04688,-0.40283 0.7324,-0.26854 1.28904,-0.69823 1.66992,-1.28906 0.38084,-0.59081 0.57127,-1.2329 0.57129,-1.92627 -2e-5,-1.01561 -0.36867,-1.85057 -1.10596,-2.50489 -0.73732,-0.65427 -1.90187,-0.98142 -3.49365,-0.98144 l -6.79688,0 z"
+         style="font-size:30px;fill:#000000;font-family:helvetica"
+         id="path3386" />
+    </g>
+  </g>
+  <cdml:cdml
+     version="0.15">
+    <cdml:info>
+      <cdml:author_program
+         version="0.13.0">BKchem</cdml:author_program>
+    </cdml:info>
+    <cdml:paper
+       crop_margin="5"
+       crop_svg="1"
+       orientation="portrait"
+       replace_minus="0"
+       type="Legal"
+       use_real_minus="0" />
+    <cdml:viewport
+       viewport="0.000000 0.000000 640.000000 480.000000" />
+    <cdml:standard
+       area_color=""
+       font_family="helvetica"
+       font_size="24"
+       line_color="#000"
+       line_width="0.06cm"
+       paper_crop_margin="5"
+       paper_crop_svg="1"
+       paper_orientation="portrait"
+       paper_type="Legal">
+      <cdml:bond
+         double-ratio="0.85"
+         length="1.4cm"
+         wedge-width="0.18cm"
+         width="0.21cm" />
+      <cdml:arrow
+         length="1.6cm" />
+      <cdml:atom
+         show_hydrogens="0" />
+    </cdml:standard>
+    <cdml:molecule
+       id="molecule37191"
+       name="">
+      <cdml:atom
+         id="atom95494"
+         name="C"
+         valency="4">
+        <cdml:point
+           x="8.328cm"
+           y="3.761cm" />
+      </cdml:atom>
+      <cdml:atom
+         id="atom99584"
+         name="C"
+         valency="4">
+        <cdml:point
+           x="9.540cm"
+           y="3.060cm" />
+      </cdml:atom>
+      <cdml:atom
+         id="atom71566"
+         name="C"
+         valency="4">
+        <cdml:point
+           x="10.753cm"
+           y="3.761cm" />
+      </cdml:atom>
+      <cdml:atom
+         id="atom78526"
+         name="C"
+         valency="4">
+        <cdml:point
+           x="10.753cm"
+           y="5.159cm" />
+      </cdml:atom>
+      <cdml:atom
+         id="atom51209"
+         name="C"
+         valency="4">
+        <cdml:point
+           x="8.328cm"
+           y="5.159cm" />
+      </cdml:atom>
+      <cdml:atom
+         id="atom66570"
+         name="C"
+         valency="4">
+        <cdml:point
+           x="9.540cm"
+           y="5.859cm" />
+      </cdml:atom>
+      <cdml:query
+         id="atom27428"
+         name="R"
+         pos="center-last">
+        <cdml:point
+           x="7.116cm"
+           y="5.859cm" />
+      </cdml:query>
+      <cdml:bond
+         bond_width="-7.92920353982"
+         center="no"
+         double_ratio="0.85"
+         end="atom71566"
+         id="bond97302"
+         line_width="2.26548672566"
+         start="atom99584"
+         type="n2" />
+      <cdml:bond
+         double_ratio="0.85"
+         end="atom78526"
+         id="bond89644"
+         line_width="2.26548672566"
+         start="atom71566"
+         type="n1" />
+      <cdml:bond
+         double_ratio="0.85"
+         end="atom99584"
+         id="bond67225"
+         line_width="2.26548672566"
+         start="atom95494"
+         type="n1" />
+      <cdml:bond
+         double_ratio="0.85"
+         end="atom27428"
+         id="bond7204"
+         line_width="2.26548672566"
+         start="atom51209"
+         type="n1" />
+      <cdml:bond
+         bond_width="7.92920353982"
+         center="no"
+         double_ratio="0.85"
+         end="atom51209"
+         id="bond59792"
+         line_width="2.26548672566"
+         start="atom95494"
+         type="n2" />
+      <cdml:bond
+         double_ratio="0.85"
+         end="atom66570"
+         id="bond90819"
+         line_width="2.26548672566"
+         start="atom51209"
+         type="n1" />
+      <cdml:bond
+         bond_width="-7.92920353982"
+         center="no"
+         double_ratio="0.85"
+         end="atom66570"
+         id="bond79818"
+         line_width="2.26548672566"
+         start="atom78526"
+         type="n2" />
+    </cdml:molecule>
+  </cdml:cdml>
+</svg>
