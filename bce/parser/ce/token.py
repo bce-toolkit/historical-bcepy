@@ -245,6 +245,11 @@ def _raise_no_content_between_operators_exception(expression, last_op_pos, cur_p
                               cur_pos,
                               cur_pos,
                               _msg_id.MSG_PE_CE_NO_CONTENT_OPERATOR_BEFORE)
+    elif last_op_pos + 1 == len(expression):
+        err.push_traceback_ex(expression,
+                              last_op_pos,
+                              last_op_pos,
+                              _msg_id.MSG_PE_CE_NO_CONTENT_OPERATOR_AFTER)
     else:
         err.push_traceback_ex(expression,
                               last_op_pos,

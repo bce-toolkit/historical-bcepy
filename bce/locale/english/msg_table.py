@@ -100,6 +100,7 @@ MESSAGES = {
     MSG_PE_CE_NO_CONTENT_DESCRIPTION: "No content.",
     MSG_PE_CE_NO_CONTENT_OPERATOR_BETWEEN: "There's no content between these two operators.",
     MSG_PE_CE_NO_CONTENT_OPERATOR_BEFORE: "There's no content before this operator.",
+    MSG_PE_CE_NO_CONTENT_OPERATOR_AFTER: "There's no content after this operator.",
     MSG_PE_CE_PARENTHESIS_MISMATCH_DESCRIPTION: "Parenthesis mismatch.",
     MSG_PE_CE_PARENTHESIS_MISMATCH_LEFT: "There's no left parenthesis matches with this parenthesis.",
     MSG_PE_CE_PARENTHESIS_MISMATCH_RIGHT: "There's no right parenthesis matches with this parenthesis.",
