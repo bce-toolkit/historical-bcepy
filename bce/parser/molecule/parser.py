@@ -710,7 +710,7 @@ def parse(expression, token_list, options):
 
                 raise err
 
-            #  Raise an error if there's no position between previous hydrate dot and this parenthesis.
+            #  Raise an error if there's no content between previous hydrate dot and this parenthesis.
             if cur_hyd_pp + 1 == token.get_position():
                 err = _pe.Error(_ml_errors.PE_ML_NO_CONTENT,
                                 _msg_id.MSG_PE_ML_NO_CONTENT_DESCRIPTION,
@@ -911,6 +911,19 @@ def parse(expression, token_list, options):
                                   prev_p_pos,
                                   prev_p_pos,
                                   _msg_id.MSG_PE_ML_PARENTHESIS_MISMATCH_RIGHT)
+
+        raise err
+
+    #  Raise an error if there's no content after previous hydrate dot.
+    if cur_hyd_pp + 1 == len(expression):
+        err = _pe.Error(_ml_errors.PE_ML_NO_CONTENT,
+                        _msg_id.MSG_PE_ML_NO_CONTENT_DESCRIPTION,
+                        options)
+
+        err.push_traceback_ex(expression,
+                              cur_hyd_pp,
+                              cur_hyd_pp,
+                              _msg_id.MSG_PE_ML_NO_CONTENT_HYDRATE_AFTER)
 
         raise err
 

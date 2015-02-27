@@ -70,6 +70,7 @@ MESSAGES = {
     MSG_PE_ML_NO_CONTENT_PARENTHESIS: "There's no content between these parentheses.",
     MSG_PE_ML_NO_CONTENT_HYDRATE_BEFORE: "There's no content before this position.",
     MSG_PE_ML_NO_CONTENT_HYDRATE_BETWEEN: "There's no content in this section.",
+    MSG_PE_ML_NO_CONTENT_HYDRATE_AFTER: "There's no content after this position.",
     MSG_PE_ML_EXCESSIVE_LEADING_ZERO_DESCRIPTION: "Excessive leading zero.",
     MSG_PE_ML_EXCESSIVE_LEADING_ZERO_TB_MESSAGE: "Exceed leading zero, they should be removed.",
     MSG_PE_ML_PARENTHESIS_MISMATCH_DESCRIPTION: "Parenthesis mismatch.",
