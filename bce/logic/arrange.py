@@ -132,7 +132,7 @@ def sort_out_results(result, ce_form, options):
     new_ans = []
 
     #  If there's only one unknown in the answer list, replace it with 1.
-    if unk_count == 1:
+    if unk_count <= 1:
         origin_sym = _sympy.Symbol(_math_equ.unknown_id_to_symbol(0, options.get_protected_math_symbol_header()))
         for ans in origin_ans:
             new_ans.append(ans.subs({origin_sym: _math_const.ONE}))
