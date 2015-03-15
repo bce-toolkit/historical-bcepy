@@ -52,7 +52,7 @@ def check_input_expression_characters(expression):
     """
 
     #  Construct valid characters.
-    valid_char = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz()[]{}+-*/^<>;.="
+    valid_char = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz()[]{}+-*/^<>;.,="
 
     #  Check all characters.
     for ch in expression:
