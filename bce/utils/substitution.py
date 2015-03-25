@@ -220,9 +220,10 @@ def substitute_symbol_in_molecule(token_list, subst_map):
             mexp_value = cur_token.get_evaluated_mexp().subs(subst_map).simplify()
 
             if mexp_value.is_Integer:
-                #  Create a new integer token.
-                token_symbol = str(mexp_value)
-                ret.append(_ml_token.create_integer_operand_token(token_symbol, token_id, -1))
+                if mexp_value != _cst.ONE:
+                    #  Create a new integer token.
+                    token_symbol = str(mexp_value)
+                    ret.append(_ml_token.create_integer_operand_token(token_symbol, token_id, -1))
             else:
                 #  Create a new math expression token.
                 token_symbol = "{%s}" % _mexp_rp.reprint_mexp(mexp_value)
@@ -529,6 +530,7 @@ def substitute_symbol_in_ce(tokenized_ce, subst_map, options):
     #  Get token list.
     ce_token_list = tokenized_ce.get_token_list()
 
+    gcd_coeff = None
     lcm_denom = _cst.ONE
     integerize_flag = True
 
@@ -550,13 +552,21 @@ def substitute_symbol_in_ce(tokenized_ce, subst_map, options):
                                                                                                  subst_map)
 
             #  Calculate the LCM of denominators if all prefixes are rational.
-            if (not (prefix_data is None)) and integerize_flag:
-                if prefix_data.is_Rational:
-                    nd = prefix_data.as_numer_denom()
-                    lcm_denom = _sympy.lcm(lcm_denom, nd[1])
-                else:
-                    integerize_flag = False
-            print(is_hydrate)
+            if not (prefix_data is None):
+                if integerize_flag:
+                    if prefix_data.is_Rational:
+                        nd = prefix_data.as_numer_denom()
+                        if gcd_coeff is None:
+                            gcd_coeff = nd[0]
+                        else:
+                            gcd_coeff = _sympy.gcd(gcd_coeff, nd[0])
+                        lcm_denom = _sympy.lcm(lcm_denom, nd[1])
+                    else:
+                        integerize_flag = False
+            else:
+                if integerize_flag:
+                    gcd_coeff = _cst.ONE
+
             #  Ignore zero-length molecule.
             if len(subst_tokens) == 0:
                 presubst_tokens.append([])
@@ -574,7 +584,10 @@ def substitute_symbol_in_ce(tokenized_ce, subst_map, options):
             presubst_prefix.append(None)
             presubst_is_hydrate.append(None)
 
-    if integerize_flag and lcm_denom != _cst.ONE:
+    if gcd_coeff is None:
+        gcd_coeff = _cst.ONE
+
+    if integerize_flag and (lcm_denom != _cst.ONE or gcd_coeff != _cst.ONE):
         token_id = 0
         while token_id < len(ce_token_list):
             cur_token = ce_token_list[token_id]
@@ -583,15 +596,14 @@ def substitute_symbol_in_ce(tokenized_ce, subst_map, options):
                     if presubst_is_hydrate[token_id]:
                         presubst_tokens[token_id].insert(0, _ml_token.create_left_parenthesis_token(-1, -1))
                         presubst_tokens[token_id].append(_ml_token.create_right_parenthesis_token(-1, -1))
-                    presubst_prefix[token_id] = lcm_denom
+                    presubst_prefix[token_id] = lcm_denom / gcd_coeff
                     token_id += 1
                     continue
-                new_prefix = presubst_prefix[token_id] * lcm_denom
+                new_prefix = presubst_prefix[token_id] * lcm_denom / gcd_coeff
 
                 if new_prefix == _cst.ONE:
                     presubst_prefix[token_id] = None
                 else:
-                    print("--")
                     if presubst_is_hydrate[token_id]:
                         presubst_tokens[token_id].insert(0, _ml_token.create_left_parenthesis_token(-1, -1))
                         presubst_tokens[token_id].append(_ml_token.create_right_parenthesis_token(-1, -1))
@@ -667,7 +679,6 @@ def substitute_symbol_in_ce(tokenized_ce, subst_map, options):
             subst_tokens = presubst_tokens[token_id]
             negative_flag = presubst_negative_flag[token_id]
             prefix_data = presubst_prefix[token_id]
-#            is_hydrate = presubst_is_hydrate[token_id]
 
             #  Ignore zero-length molecule.
             if len(subst_tokens) == 0:

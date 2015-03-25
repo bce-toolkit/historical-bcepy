@@ -83,8 +83,8 @@ class CombinedResult:
     def __init__(self, left_items, right_items):
         """Initialize the class with specific left and right items.
 
-        :type left_items: list of [CombinedResultItem]
-        :type right_items: list of [CombinedResultItem]
+        :type left_items: list of CombinedResultItem
+        :type right_items: list of CombinedResultItem
         :param left_items: A list contains all items on the left side.
         :param right_items: A list contains all items on the right side.
         """
