@@ -552,20 +552,21 @@ def substitute_symbol_in_ce(tokenized_ce, subst_map, options):
                                                                                                  subst_map)
 
             #  Calculate the LCM of denominators if all prefixes are rational.
-            if not (prefix_data is None):
-                if integerize_flag:
-                    if prefix_data.is_Rational:
-                        nd = prefix_data.as_numer_denom()
-                        if gcd_coeff is None:
-                            gcd_coeff = nd[0]
+            if len(subst_tokens) != 0:
+                if not (prefix_data is None):
+                    if integerize_flag:
+                        if prefix_data.is_Rational:
+                            nd = prefix_data.as_numer_denom()
+                            if gcd_coeff is None:
+                                gcd_coeff = nd[0]
+                            else:
+                                gcd_coeff = _sympy.gcd(gcd_coeff, nd[0])
+                            lcm_denom = _sympy.lcm(lcm_denom, nd[1])
                         else:
-                            gcd_coeff = _sympy.gcd(gcd_coeff, nd[0])
-                        lcm_denom = _sympy.lcm(lcm_denom, nd[1])
-                    else:
-                        integerize_flag = False
-            else:
-                if integerize_flag:
-                    gcd_coeff = _cst.ONE
+                            integerize_flag = False
+                else:
+                    if integerize_flag:
+                        gcd_coeff = _cst.ONE
 
             #  Ignore zero-length molecule.
             if len(subst_tokens) == 0:
@@ -591,7 +592,7 @@ def substitute_symbol_in_ce(tokenized_ce, subst_map, options):
         token_id = 0
         while token_id < len(ce_token_list):
             cur_token = ce_token_list[token_id]
-            if cur_token.is_molecule():
+            if cur_token.is_molecule() and len(presubst_tokens[token_id]) != 0:
                 if presubst_prefix[token_id] is None:
                     if presubst_is_hydrate[token_id]:
                         presubst_tokens[token_id].insert(0, _ml_token.create_left_parenthesis_token(-1, -1))
