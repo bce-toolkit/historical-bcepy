@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-#  Copyright 2014 The BCE Authors. All rights reserved.
+#  Copyright 2014-2015 The BCE Authors. All rights reserved.
 #  Use of this source code is governed by a BSD-style license that can be
 #  found in the license.txt file.
 #
@@ -9,42 +9,39 @@ import bce.math.equation as _math_equ
 import bce.math.constant as _math_const
 import bce.locale.msg_id as _msg_id
 import bce.logic.error as _le
-import bce.parser.common.token as _base_token
 import bce.parser.ce.token as _ce_token
 import sympy as _sympy
 import copy
+import bce.parser.molecule.ast_base as _ml_ast_base
+import bce.parser.molecule.decompiler.ast_to_bce as _ml_decompiler
 
 #  Add this for PyCharm auto-hinting.
 import bce.parser.ce.parser as _ce_parser
-import bce.parser.molecule.token as _ml_token
 import bce.option as _opt
 
 
 class CombinedResultItem:
     """Item class of class CombinedResult."""
 
-    def __init__(self, molecule_token_list, operator, coeff, molecule_is_hydrate):
+    def __init__(self, molecule, operator, coeff):
         """Initialize the result item.
 
-        :type molecule_token_list: list
+        :type molecule: _ml_ast_base._ASTNodeBaseML
         :type operator: int
-        :type molecule_is_hydrate: bool
-        :param molecule_token_list: The token list of the molecule.
+        :param molecule: The parsed molecule.
         :param operator: The connection operator.
         :param coeff: The coefficient number.
-        :param molecule_is_hydrate: Whether the molecule is a hydrate.
         """
 
-        self.__m = molecule_token_list
+        self.__m = molecule
         self.__o = operator
         self.__c = coeff
-        self.__h = molecule_is_hydrate
 
-    def get_molecule_token_list(self):
-        """Get the token list of the molecule.
+    def get_molecule(self):
+        """Get the parsed molecule.
 
-        :rtype : list of _ml_token.Token
-        :return: The token list.
+        :rtype : _ml_ast_base._ASTNodeBaseML
+        :return: The molecule.
         """
 
         return self.__m
@@ -65,15 +62,6 @@ class CombinedResultItem:
         """
 
         return self.__c
-
-    def is_hydrate_molecule(self):
-        """Get whether the molecule is hydrate.
-
-        :rtype : bool
-        :return: Return True if the molecule is hydrate.
-        """
-
-        return self.__h
 
 
 class CombinedResult:
@@ -144,27 +132,56 @@ def sort_out_results(result, ce_form, options):
 
         new_ans = copy.copy(origin_ans)
 
+    #  Simplify origin answer.
+    for ans_id in range(0, len(new_ans)):
+        new_ans[ans_id] = new_ans[ans_id].simplify()
+
     #  Initialize the least common multiple of all numeric denominators.
     denominator_lcm = _math_const.ONE
 
+    #  To integer.
     for ans_id in range(0, len(new_ans)):
-        #  Simplify origin answer.
-        val = new_ans[ans_id].simplify()
+        #  Get origin answer.
+        val = new_ans[ans_id]
 
         #  Get the denominator.
         nd = val.as_numer_denom()
         nd_denominator = nd[1]
 
-        if nd_denominator.is_number:
+        if nd_denominator.is_Integer:
             #  Calculate the LCM.
             denominator_lcm = _sympy.lcm(denominator_lcm, nd_denominator)
-
-        #  Write new answer.
-        new_ans[ans_id] = val
 
     #  Multiply all items in the answer list by |denominator_lcm|.
     for ans_id in range(0, len(new_ans)):
         new_ans[ans_id] *= denominator_lcm
+
+    #  Initialize the great common division of all coefficients.
+    numerator_gcd = None
+    use_gcd = True
+
+    for ans_id in range(0, len(new_ans)):
+        #  Get origin answer.
+        val = new_ans[ans_id]
+
+        #  Get the numerator.
+        nd = val.as_numer_denom()
+        nd_numerator = nd[0]
+
+        #  Process the numerator.
+        if nd_numerator.is_Integer and not nd_numerator.is_zero:
+            if use_gcd:
+                if numerator_gcd is None:
+                    numerator_gcd = nd_numerator
+                else:
+                    numerator_gcd = _sympy.gcd(nd_numerator, numerator_gcd)
+        else:
+            use_gcd = False
+
+    #  Remove common factor.
+    if use_gcd and numerator_gcd is not None:
+        for ans_id in range(0, len(new_ans)):
+            new_ans[ans_id] /= numerator_gcd
 
     return new_ans
 
@@ -175,7 +192,7 @@ def combine_result(parsed_ce, sorted_result, options):
     :type parsed_ce: _ce_parser.ParsedCE
     :type sorted_result: list
     :type options: _opt.Option
-    :param parsed_ce: The parsed chemical equation / expression information.
+    :param parsed_ce: The parsed chemical equation / expression information (Molecule prefixes must be removed).
     :param sorted_result: Result returned by sort_out_results() routine.
     :param options: BCE options.
     :rtype : CombinedResult
@@ -210,21 +227,19 @@ def combine_result(parsed_ce, sorted_result, options):
                 #  is disabled.
                 if parsed_ce.get_form() == _ce_token.TOKENIZED_CE_FORM_NORMAL and \
                         not auto_correct_enabled:
-                    ml_symbol = _base_token.untokenize(ml_info.get_token_list())
+                    ml_symbol = _ml_decompiler.decompile_ast(ml_info.get_ast_root())
                     raise _le.LogicError(_le.LE_WRONG_SIDE,
                                          _msg_id.MSG_LE_WRONG_SIDE,
                                          options,
                                          {"$1": ml_symbol})
 
-                right_items.append(CombinedResultItem(ml_info.get_token_list(),
+                right_items.append(CombinedResultItem(ml_info.get_ast_root(),
                                                       pd_item.get_operator(),
-                                                      -coeff,
-                                                      ml_info.is_hydrate()))
+                                                      -coeff))
             else:
-                left_items.append(CombinedResultItem(ml_info.get_token_list(),
+                left_items.append(CombinedResultItem(ml_info.get_ast_root(),
                                                      pd_item.get_operator(),
-                                                     coeff,
-                                                     ml_info.is_hydrate()))
+                                                     coeff))
         else:
             #  Remove the molecule if its coefficient is zero.
             #  Raise an error if the auto-correct function is disabled.
@@ -232,7 +247,7 @@ def combine_result(parsed_ce, sorted_result, options):
                 raise _le.LogicError(_le.LE_ZERO_COEFFICIENT,
                                      _msg_id.MSG_LE_ARRANGER_ZERO_COEFFICIENT,
                                      options,
-                                     {"$1": _base_token.untokenize(pd_item.get_molecule().get_token_list())})
+                                     {"$1": _ml_decompiler.decompile_ast(pd_item.get_molecule().get_ast_root())})
 
         #  Increase the iterator.
         result_id += 1
@@ -252,17 +267,15 @@ def combine_result(parsed_ce, sorted_result, options):
                     raise _le.LogicError(_le.LE_WRONG_SIDE,
                                          _msg_id.MSG_LE_WRONG_SIDE,
                                          options,
-                                         {"$1": _base_token.untokenize(ml_info.get_token_list())})
+                                         {"$1": _ml_decompiler.decompile_ast(ml_info.get_ast_root())})
 
-                left_items.append(CombinedResultItem(ml_info.get_token_list(),
+                left_items.append(CombinedResultItem(ml_info.get_ast_root(),
                                                      pd_item.get_operator(),
-                                                     -coeff,
-                                                     ml_info.is_hydrate()))
+                                                     -coeff))
             else:
-                right_items.append(CombinedResultItem(ml_info.get_token_list(),
+                right_items.append(CombinedResultItem(ml_info.get_ast_root(),
                                                       pd_item.get_operator(),
-                                                      coeff,
-                                                      ml_info.is_hydrate()))
+                                                      coeff))
         else:
             #  Remove the molecule if its coefficient is zero.
             #  Raise an error if the auto-correct function is disabled.
@@ -270,7 +283,7 @@ def combine_result(parsed_ce, sorted_result, options):
                 raise _le.LogicError(_le.LE_ZERO_COEFFICIENT,
                                      _msg_id.MSG_LE_ARRANGER_ZERO_COEFFICIENT,
                                      options,
-                                     {"$1": _base_token.untokenize(pd_item.get_molecule().get_token_list())})
+                                     {"$1": _ml_decompiler.decompile_ast(pd_item.get_molecule().get_ast_root())})
 
         #  Increase the iterator.
         result_id += 1

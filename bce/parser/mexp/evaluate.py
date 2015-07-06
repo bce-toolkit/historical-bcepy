@@ -8,8 +8,6 @@
 import bce.parser.mexp.token as _mexp_token
 import bce.parser.mexp.parser as _mexp_parser
 import bce.parser.mexp.rpn as _mexp_rpn
-
-#  Import this for PyCharm auto type-hinting.
 import bce.option as _opt
 
 

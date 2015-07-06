@@ -10,8 +10,6 @@ import bce.parser.common.error as _pe
 import bce.parser.mexp.operator as _mexp_operators
 import bce.parser.mexp.error as _mexp_errors
 import bce.locale.msg_id as _msg_id
-
-#  Import this for PyCharm auto type-hinting.
 import bce.option as _opt
 
 #  Token types.
@@ -462,12 +460,6 @@ def tokenize(expression, options):
             prev_dot_pos = -1
             search_pos = cur_pos + 1
             search_end = end_pos
-            lz_last_pos = -1
-
-            if cur_ch == "0":
-                chk_ld_zero = True
-            else:
-                chk_ld_zero = False
 
             while search_pos < end_pos:
                 search_ch = expression[search_pos]
@@ -497,32 +489,8 @@ def tokenize(expression, options):
                         search_end = search_pos
                         break
 
-                #  Check leading zero.
-                if chk_ld_zero:
-                    if search_ch != "0":
-                        chk_ld_zero = False
-                    else:
-                        lz_last_pos = search_pos
-
                 #  Go to next searching position.
                 search_pos += 1
-
-            #  If the whole number is filled with zero, the last zero isn't leading zero.
-            if lz_last_pos + 1 == search_end:
-                lz_last_pos -= 1
-
-            #  Raise an error if the number has leading zero.
-            if lz_last_pos != -1:
-                err = _pe.Error(_mexp_errors.PE_MEXP_EXCESSIVE_LEADING_ZERO,
-                                _msg_id.MSG_PE_MEXP_EXCESSIVE_LEADING_ZERO_DESCRIPTION,
-                                options)
-
-                err.push_traceback_ex(expression,
-                                      cur_pos,
-                                      lz_last_pos,
-                                      _msg_id.MSG_PE_MEXP_EXCESSIVE_LEADING_ZERO_TB_MESSAGE)
-
-                raise err
 
             if met_dot:
                 #  Create a float token if there's a decimal dot in the sequence.

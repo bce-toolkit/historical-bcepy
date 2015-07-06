@@ -7,7 +7,7 @@
 
 import bce.option as _opt
 import bce.parser.mexp.evaluate as _mexp_ev
-import bce.parser.mexp.reprint as _mexp_rp
+import bce.parser.mexp.decompiler.to_bce as _mexp_rp
 import bce.parser.common.error as _pe
 import bce.utils.test_utils as _tu
 import bce.utils.sys_locale as _sl
@@ -37,7 +37,7 @@ def run_shell():
 
         #  Evaluate the expression and print it out.
         try:
-            print(_mexp_rp.reprint_mexp(_mexp_ev.evaluate_math_expression(expr, opt)))
+            print(_mexp_rp.decompile_mexp(_mexp_ev.evaluate_math_expression(expr, opt)))
         except _pe.Error as err:
             print(err.to_string())
 

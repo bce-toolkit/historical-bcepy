@@ -1,4 +1,11 @@
 #!/usr/bin/env python
+#
+#  Copyright 2014-2015 The BCE Authors. All rights reserved.
+#  Use of this source code is governed by a BSD-style license that can be
+#  found in the license.txt file.
+#
+
+import copy as _py_copy
 
 import bce.math.equation as _math_equ
 import bce.parser.ce.token as _ce_token
@@ -6,11 +13,8 @@ import bce.parser.ce.parser as _ce_parser
 import bce.locale.msg_id as _msg_id
 import bce.logic.modeling as _logic_modeling
 import bce.logic.arrange as _logic_arrange
-import bce.logic.rebuild as _logic_rebuild
+import bce.logic.decompiler.to_bce as _logic_rebuild
 import bce.logic.error as _le
-import copy as _py_copy
-
-#  Add this for PyCharm auto-hinting.
 import bce.option as _opt
 
 
@@ -31,7 +35,7 @@ def balance_chemical_equation(expression, options):
     tokenized_ce = _ce_token.tokenize(expression, options)
 
     #  Parse tokenized chemical equation / expression.
-    parsed_ce = _ce_parser.parse(expression, tokenized_ce, options)
+    parsed_ce = _ce_parser.parse(expression, tokenized_ce, True, options)
     ce_form = parsed_ce.get_form()
 
     #  Build linear equations.
@@ -64,7 +68,7 @@ def build_answer(balanced_result):
     :return: A string contains the balanced result.
     """
 
-    return _logic_rebuild.rebuild_ce(balanced_result)
+    return _logic_rebuild.decompile_combined_result(balanced_result)
 
 
 def auto_balance_chemical_equation(expression, options):

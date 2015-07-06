@@ -6,8 +6,8 @@
 #
 
 _MAJOR = 1
-_MINOR = 2
-_REVISION = 176
+_MINOR = 3
+_REVISION = 294
 
 
 def get_version():

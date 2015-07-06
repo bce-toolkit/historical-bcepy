@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-#  Copyright 2014 The BCE Authors. All rights reserved.
+#  Copyright 2014-2015 The BCE Authors. All rights reserved.
 #  Use of this source code is governed by a BSD-style license that can be
 #  found in the license.txt file.
 #
@@ -35,21 +35,12 @@ def build_matrix(parsed_ce):
         #  Get molecule information.
         ml_info = process_ml.get_molecule()
 
-        #  Get the electronic count of the molecule.
-        e_count = ml_info.get_electronic_count()
-
-        #  Process electronic.
-        if (not e_count.is_zero) and (not "e" in ref_atom_idx):
-            #  Write the row index of the electronic and increase the row counter.
-            ref_atom_idx["e"] = ref_atom_counter
-            ref_atom_counter += 1
-
         #  Get the atom dictionary of the molecule.
         atom_dict = ml_info.get_atom_dictionary()
 
         #  Process atoms.
         for atom in atom_dict:
-            if not atom in ref_atom_idx:
+            if atom not in ref_atom_idx:
                 #  Write the row index of the atom and increase the row counter.
                 ref_atom_idx[atom] = ref_atom_counter
                 ref_atom_counter += 1
@@ -65,20 +56,10 @@ def build_matrix(parsed_ce):
         #  Get molecule information.
         ml_info = process_ml.get_molecule()
 
-        #  Get the electronic count of the molecule.
-        e_count = ml_info.get_electronic_count()
-
         #  Get whether the operator before the molecule is '+' or '=' or nothing.
         #  Note that no operator is the same as '+' and '=' is the same as '+'
         #  either.
         is_plus_op = (process_ml.get_operator() == _ce_parser.PARSED_CE_ITEM_OP_PLUS)
-
-        #  If the molecule has electronic, write the its count to specific position.
-        if not e_count.is_zero:
-            if is_plus_op:
-                mtx.write_item_by_position(ref_atom_idx["e"], col_id, e_count)
-            else:
-                mtx.write_item_by_position(ref_atom_idx["e"], col_id, -e_count)
 
         #  Get the atom dictionary of the molecule.
         atom_dict = ml_info.get_atom_dictionary()
@@ -98,20 +79,10 @@ def build_matrix(parsed_ce):
         #  Get molecule information.
         ml_info = process_ml.get_molecule()
 
-        #  Get the electronic count of the molecule.
-        e_count = ml_info.get_electronic_count()
-
         #  Get whether the operator before the molecule is '+' or '=' or nothing.
         #  Note that no operator is the same as '+' and '=' is the same as '+'
         #  either.
         is_plus_op = (process_ml.get_operator() == _ce_parser.PARSED_CE_ITEM_OP_PLUS)
-
-        #  If the molecule has electronic, write the its count to specific position.
-        if not e_count.is_zero:
-            if is_plus_op:
-                mtx.write_item_by_position(ref_atom_idx["e"], col_id, -e_count)
-            else:
-                mtx.write_item_by_position(ref_atom_idx["e"], col_id, e_count)
 
         #  Get the atom dictionary of the molecule.
         atom_dict = ml_info.get_atom_dictionary()

@@ -12,8 +12,6 @@ import bce.parser.mexp.token as _mexp_tok
 import bce.parser.mexp.error as _mexp_errors
 import bce.parser.mexp.function as _mexp_fns
 import bce.locale.msg_id as _msg_id
-
-#  Import this for PyCharm auto type-hinting.
 import bce.option as _opt
 
 

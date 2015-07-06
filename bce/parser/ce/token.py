@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-#  Copyright 2014 The BCE Authors. All rights reserved.
+#  Copyright 2014-2015 The BCE Authors. All rights reserved.
 #  Use of this source code is governed by a BSD-style license that can be
 #  found in the license.txt file.
 #
@@ -10,8 +10,6 @@ import bce.parser.common.token as _base_token
 import bce.parser.common.error as _pe
 import bce.parser.ce.error as _ce_errors
 import bce.locale.msg_id as _msg_id
-
-#  Add this for PyCharm auto-hinting.
 import bce.option as _opt
 
 #  Token types.
@@ -372,7 +370,7 @@ def tokenize(expression, options):
 
             #  Raise an error if we can't find the end ']'.
             if search_end == -1:
-                _raise_parenthesis_mismatch_exception(expression, cur_pos, cur_pos, False)
+                _raise_parenthesis_mismatch_exception(expression, cur_pos, options, False)
 
             #  Go to next position.
             cur_pos = search_end

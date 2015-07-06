@@ -1,20 +1,17 @@
 #!/usr/bin/env python
 #
-#  Copyright 2014 The BCE Authors. All rights reserved.
+#  Copyright 2014-2015 The BCE Authors. All rights reserved.
 #  Use of this source code is governed by a BSD-style license that can be
 #  found in the license.txt file.
 #
 
 import bce.parser.common.token as _base_token
 import bce.parser.common.error as _pe
-import bce.parser.electronic.token as _el_token
-import bce.parser.electronic.parser as _el_parser
+import bce.parser.molecule.error as _ml_error
 import bce.parser.mexp.evaluate as _mexp_ev
-import bce.parser.molecule.error as _ml_errors
 import bce.locale.msg_id as _msg_id
-
-#  Add this for PyCharm auto-hinting.
 import bce.option as _opt
+import sympy as _sympy
 
 #  Token types.
 TOKEN_TYPE_SYMBOL = 1
@@ -22,50 +19,30 @@ TOKEN_TYPE_OPERAND = 2
 TOKEN_TYPE_HYDRATE_DOT = 3
 TOKEN_TYPE_PARENTHESIS = 4
 TOKEN_TYPE_ABBREVIATION = 5
-TOKEN_TYPE_ELECTRONIC = 6
-TOKEN_TYPE_STATUS = 7
+TOKEN_TYPE_STATUS = 6
+TOKEN_TYPE_ELECTRONIC = 7
+TOKEN_TYPE_END = 8
 
 #  Token sub-types.
+#  (For operands)
 TOKEN_SUBTYPE_INTEGER = 1
 TOKEN_SUBTYPE_MEXP = 2
+
+#  (For parentheses)
 TOKEN_SUBTYPE_PARENTHESIS_LEFT = 1
 TOKEN_SUBTYPE_PARENTHESIS_RIGHT = 2
+
+#  (For status)
 TOKEN_SUBTYPE_AQUEOUS = 1
 TOKEN_SUBTYPE_GAS = 2
 TOKEN_SUBTYPE_LIQUID = 3
 TOKEN_SUBTYPE_SOLID = 4
 
-
-class ElectronicDataContainer:
-    """Container for the electronic data."""
-
-    def __init__(self, token_list, count):
-        """Initialize the container.
-
-        :type token_list: list
-        :param token_list: The token list.
-        :param count: The count of electronics.
-        """
-
-        self.__token_list = token_list
-        self.__cnt = count
-
-    def get_token_list(self):
-        """Get the token list.
-
-        :rtype : list
-        :return: The token list.
-        """
-
-        return self.__token_list
-
-    def get_count(self):
-        """Get the electronic count.
-
-        :return: The electronic count.
-        """
-
-        return self.__cnt
+#  (For electronics)
+TOKEN_SUBTYPE_EL_BEGIN = 1
+TOKEN_SUBTYPE_EL_END = 2
+TOKEN_SUBTYPE_EL_FLAG_POSITIVE = 3
+TOKEN_SUBTYPE_EL_FLAG_NEGATIVE = 4
 
 
 class Token(_base_token.BaseToken):
@@ -192,15 +169,6 @@ class Token(_base_token.BaseToken):
 
         return self.get_type() == TOKEN_TYPE_ABBREVIATION
 
-    def is_electronic(self):
-        """Get whether the token is an electronic token.
-
-        :rtype : bool
-        :return: Return True if the token is an electronic token.
-        """
-
-        return self.get_type() == TOKEN_TYPE_ELECTRONIC
-
     def set_evaluated_mexp(self, ev_value):
         """Set the evaluated MEXP value of this token.
 
@@ -216,24 +184,6 @@ class Token(_base_token.BaseToken):
         """
 
         return self.__extra_ev_mexp
-
-    def set_electronic_data(self, el_data):
-        """Set electronic data (only available in electronic token).
-
-        :type el_data: ElectronicDataContainer
-        :param el_data: The data.
-        """
-
-        self.__extra_el = el_data
-
-    def get_electronic_data(self):
-        """Get electronic data (only available in electronic token).
-
-        :rtype : ElectronicDataContainer
-        :return: The data.
-        """
-
-        return self.__extra_el
 
     def is_status(self):
         """Get whether the token is a status descriptor.
@@ -291,6 +241,83 @@ class Token(_base_token.BaseToken):
             return False
 
         return self.get_subtype() == TOKEN_SUBTYPE_SOLID
+
+    def is_electronic(self):
+        """Get whether the token is an electronic token.
+
+        :rtype : bool
+        :return: True if so. Otherwise, return False.
+        """
+
+        return self.get_type() == TOKEN_TYPE_ELECTRONIC
+
+    def get_operand_value(self):
+        """Get the value of the operand token.
+
+        :return: The value.
+        """
+
+        if self.is_mexp_operand():
+            return self.get_evaluated_mexp()
+        else:
+            return _sympy.Integer(int(self.get_symbol()))
+
+    def is_electronic_begin(self):
+        """Get whether the token is an electronic begin parenthesis token.
+
+        :rtype : bool
+        :return: True if so. Otherwise, return False.
+        """
+
+        if not self.is_electronic():
+            return False
+
+        return self.get_subtype() == TOKEN_SUBTYPE_EL_BEGIN
+
+    def is_electronic_end(self):
+        """Get whether the token is an electronic end parenthesis token.
+
+        :rtype : bool
+        :return: True if so. Otherwise, return False.
+        """
+
+        if not self.is_electronic():
+            return False
+
+        return self.get_subtype() == TOKEN_SUBTYPE_EL_END
+
+    def is_electronic_positive_flag(self):
+        """Get whether the token is a positive electronic flag token.
+
+        :rtype : bool
+        :return: True if so. Otherwise, return False.
+        """
+
+        if not self.is_electronic():
+            return False
+
+        return self.get_subtype() == TOKEN_SUBTYPE_EL_FLAG_POSITIVE
+
+    def is_electronic_negative_flag(self):
+        """Get whether the token is a negative electronic flag token.
+
+        :rtype : bool
+        :return: True if so. Otherwise, return False.
+        """
+
+        if not self.is_electronic():
+            return False
+
+        return self.get_subtype() == TOKEN_SUBTYPE_EL_FLAG_NEGATIVE
+
+    def is_end(self):
+        """Get whether the token is an end token.
+
+        :rtype : bool
+        :return: True if so. Otherwise, return False.
+        """
+
+        return self.get_type() == TOKEN_TYPE_END
 
     def set_position(self, new_position):
         """Set the position.
@@ -411,27 +438,6 @@ def create_abbreviation_token(symbol, idx=-1, pos=-1):
     return Token(symbol, TOKEN_TYPE_ABBREVIATION, None, idx, pos)
 
 
-def create_electronic_token(symbol, data, idx=-1, pos=-1):
-    """Create an electronic token.
-
-    :type symbol: str
-    :type data: ElectronicDataContainer
-    :type idx: int
-    :type pos: int
-    :param symbol: The symbol.
-    :param data: The parsed data.
-    :param idx: The index.
-    :param pos: The starting position.
-    :rtype : Token
-    :return: The created token.
-    """
-
-    new_token = Token(symbol, TOKEN_TYPE_ELECTRONIC, None, idx, pos)
-    new_token.set_electronic_data(data)
-
-    return new_token
-
-
 def create_aqueous_status_token(idx=-1, pos=-1):
     """Create an aqueous status descriptor token.
 
@@ -488,6 +494,76 @@ def create_solid_status_token(idx=-1, pos=-1):
     return Token("(s)", TOKEN_TYPE_STATUS, TOKEN_SUBTYPE_SOLID, idx, pos)
 
 
+def create_electronic_begin_token(idx=-1, pos=-1):
+    """Create an electronic begin parenthesis token.
+
+    :type idx: int
+    :type pos: int
+    :param idx: The index.
+    :param pos: The starting position.
+    :rtype : Token
+    :return: The created token.
+    """
+
+    return Token("<", TOKEN_TYPE_ELECTRONIC, TOKEN_SUBTYPE_EL_BEGIN, idx, pos)
+
+
+def create_end_token(idx=-1, pos=-1):
+    """Create an end token.
+
+    :type idx: int
+    :type pos: int
+    :param idx: The index.
+    :param pos: The position.
+    :rtype : Token
+    :return: The created token.
+    """
+
+    return Token("", TOKEN_TYPE_END, None, idx, pos)
+
+
+def create_electronic_end_token(idx=-1, pos=-1):
+    """Create an electronic end parenthesis token.
+
+    :type idx: int
+    :type pos: int
+    :param idx: The index.
+    :param pos: The starting position.
+    :rtype : Token
+    :return: The created token.
+    """
+
+    return Token(">", TOKEN_TYPE_ELECTRONIC, TOKEN_SUBTYPE_EL_END, idx, pos)
+
+
+def create_positive_electronic_flag_token(idx=-1, pos=-1):
+    """Create a positive electronic flag token.
+
+    :type idx: int
+    :type pos: int
+    :param idx: The index.
+    :param pos: The starting position.
+    :rtype : Token
+    :return: The created token.
+    """
+
+    return Token("e+", TOKEN_TYPE_ELECTRONIC, TOKEN_SUBTYPE_EL_FLAG_POSITIVE, idx, pos)
+
+
+def create_negative_electronic_flag_token(idx=-1, pos=-1):
+    """Create a negative electronic flag token.
+
+    :type idx: int
+    :type pos: int
+    :param idx: The index.
+    :param pos: The starting position.
+    :rtype : Token
+    :return: The created token.
+    """
+
+    return Token("e-", TOKEN_TYPE_ELECTRONIC, TOKEN_SUBTYPE_EL_FLAG_NEGATIVE, idx, pos)
+
+
 def tokenize(expression, options):
     """Tokenize a molecule expression.
 
@@ -513,12 +589,6 @@ def tokenize(expression, options):
             #  Search for the next non-digit character.
             search_pos = cur_pos + 1
             search_end = end_pos
-            lz_last_pos = -1
-
-            if cur_ch == "0":
-                chk_ld_zero = True
-            else:
-                chk_ld_zero = False
 
             while search_pos < end_pos:
                 search_ch = expression[search_pos]
@@ -527,32 +597,8 @@ def tokenize(expression, options):
                     search_end = search_pos
                     break
 
-                #  Check leading zero.
-                if chk_ld_zero:
-                    if search_ch != "0":
-                        chk_ld_zero = False
-                    else:
-                        lz_last_pos = search_pos
-
                 #  Go to next searching position.
                 search_pos += 1
-
-            #  If the whole number is filled with zero, the last zero isn't leading zero.
-            if lz_last_pos + 1 == search_end:
-                lz_last_pos -= 1
-
-            #  Raise an error if the number has leading zero.
-            if lz_last_pos != -1:
-                err = _pe.Error(_ml_errors.PE_ML_EXCESSIVE_LEADING_ZERO,
-                                _msg_id.MSG_PE_ML_EXCESSIVE_LEADING_ZERO_DESCRIPTION,
-                                options)
-
-                err.push_traceback_ex(expression,
-                                      cur_pos,
-                                      lz_last_pos,
-                                      _msg_id.MSG_PE_ML_EXCESSIVE_LEADING_ZERO_TB_MESSAGE)
-
-                raise err
 
             #  Create an integer token.
             r.append(create_integer_operand_token(expression[cur_pos:search_end], len(r), cur_pos))
@@ -666,27 +712,14 @@ def tokenize(expression, options):
 
             #  Raise an error if we can't find the ']'.
             if search_end == -1:
-                err = _pe.Error(_ml_errors.PE_ML_PARENTHESIS_MISMATCH,
+                err = _pe.Error(_ml_error.PE_ML_PARENTHESIS_MISMATCH,
                                 _msg_id.MSG_PE_ML_PARENTHESIS_MISMATCH_DESCRIPTION,
                                 options)
 
                 err.push_traceback_ex(expression,
                                       cur_pos,
                                       cur_pos,
-                                      _msg_id.MSG_PE_ML_PARENTHESIS_MISMATCH_ABBR_RIGHT)
-
-                raise err
-
-            #  Raise an error if there's no content between these two parentheses.
-            if cur_pos + 2 == search_end:
-                err = _pe.Error(_ml_errors.PE_ML_NO_CONTENT,
-                                _msg_id.MSG_PE_ML_NO_CONTENT_DESCRIPTION,
-                                options)
-
-                err.push_traceback_ex(expression,
-                                      cur_pos,
-                                      cur_pos + 1,
-                                      _msg_id.MSG_PE_ML_NO_CONTENT_PARENTHESIS)
+                                      _msg_id.MSG_PE_ML_PARENTHESIS_MISMATCH_MISSING_RIGHT)
 
                 raise err
 
@@ -719,7 +752,7 @@ def tokenize(expression, options):
                     if p_mexp == 0:
                         #  Raise an error if the parenthesis isn't '}'.
                         if search_ch != "}":
-                            err = _pe.Error(_ml_errors.PE_ML_PARENTHESIS_MISMATCH,
+                            err = _pe.Error(_ml_error.PE_ML_PARENTHESIS_MISMATCH,
                                             _msg_id.MSG_PE_ML_PARENTHESIS_MISMATCH_DESCRIPTION,
                                             options)
 
@@ -746,27 +779,27 @@ def tokenize(expression, options):
 
             #  Raise an error if we can't find the end '}'.
             if search_end == -1:
-                err = _pe.Error(_ml_errors.PE_ML_PARENTHESIS_MISMATCH,
+                err = _pe.Error(_ml_error.PE_ML_PARENTHESIS_MISMATCH,
                                 _msg_id.MSG_PE_ML_PARENTHESIS_MISMATCH_DESCRIPTION,
                                 options)
 
                 err.push_traceback_ex(expression,
                                       cur_pos,
                                       cur_pos,
-                                      _msg_id.MSG_PE_ML_PARENTHESIS_MISMATCH_MEXP_RIGHT)
+                                      _msg_id.MSG_PE_ML_PARENTHESIS_MISMATCH_MISSING_RIGHT)
 
                 raise err
 
             #  Raise an error if the math expression has no content.
             if cur_pos + 2 == search_end:
-                err = _pe.Error(_ml_errors.PE_ML_NO_CONTENT,
+                err = _pe.Error(_ml_error.PE_ML_NO_CONTENT,
                                 _msg_id.MSG_PE_ML_NO_CONTENT_DESCRIPTION,
                                 options)
 
                 err.push_traceback_ex(expression,
                                       cur_pos,
                                       cur_pos + 1,
-                                      _msg_id.MSG_PE_ML_NO_CONTENT_MEXP)
+                                      _msg_id.MSG_PE_ML_NO_CONTENT_INSIDE)
 
                 raise err
 
@@ -778,9 +811,9 @@ def tokenize(expression, options):
                 ev_value = _mexp_ev.evaluate_math_expression(mexp_expr, options)
             except _pe.Error as err:
                 err.push_traceback_ex(expression,
-                                      cur_pos + 1,
-                                      search_end - 2,
-                                      _msg_id.MSG_PE_ML_SUB_MEXP_ERROR_TRACE_MESSAGE)
+                                      cur_pos,
+                                      search_end - 1,
+                                      _msg_id.MSG_PE_ML_TRACEBACK_ERROR_MEXP)
 
                 raise err
 
@@ -793,73 +826,43 @@ def tokenize(expression, options):
             continue
 
         if cur_ch == "<":
-            #  Initialize.
-            search_pos = cur_pos + 1
-            search_end = -1
-
-            #  Searching for the '>'.
-            while search_pos < end_pos:
-                if expression[search_pos] == ">":
-                    search_end = search_pos
-                    break
-
-                #  Go to next searching position.
-                search_pos += 1
-
-            #  Raise an error if not found.
-            if search_end == -1:
-                err = _pe.Error(_ml_errors.PE_ML_PARENTHESIS_MISMATCH,
-                                _msg_id.MSG_PE_ML_PARENTHESIS_MISMATCH_DESCRIPTION,
-                                options)
-
-                err.push_traceback_ex(expression,
-                                      cur_pos,
-                                      cur_pos,
-                                      _msg_id.MSG_PE_ML_PARENTHESIS_MISMATCH_EL_RIGHT)
-
-                raise err
-
-            #  Raise an error if there's no content between two parentheses.
-            if cur_pos + 1 == search_end:
-                err = _pe.Error(_ml_errors.PE_ML_NO_CONTENT,
-                                _msg_id.MSG_PE_ML_NO_CONTENT_DESCRIPTION,
-                                options)
-
-                err.push_traceback_ex(expression,
-                                      cur_pos,
-                                      search_end,
-                                      _msg_id.MSG_PE_ML_NO_CONTENT_EL)
-
-                raise err
-
-            #  Get the inner electronic expression.
-            el_expr = expression[cur_pos + 1:search_end]
-
-            #  Parse the expression.
-            try:
-                el_tok_list = _el_token.tokenize(el_expr, options)
-                el_count = _el_parser.parse(el_expr, el_tok_list, options)
-            except _pe.Error as err:
-                err.push_traceback_ex(expression,
-                                      cur_pos,
-                                      search_end,
-                                      _msg_id.MSG_PE_ML_SUB_EL_ERROR_TRACE_MESSAGE)
-
-                raise err
-
-            #  Create an electronic token.
-            r.append(create_electronic_token(expression[cur_pos:search_end + 1],
-                                             ElectronicDataContainer(el_tok_list, el_count),
-                                             len(r),
-                                             cur_pos))
+            #  Create an electronic begin parenthesis token.
+            r.append(create_electronic_begin_token(len(r), cur_pos))
 
             #  Go to next position.
-            cur_pos = search_end + 1
+            cur_pos += 1
+
+            continue
+
+        if cur_ch == ">":
+            #  Create an electronic begin parenthesis token.
+            r.append(create_electronic_end_token(len(r), cur_pos))
+
+            #  Go to next position.
+            cur_pos += 1
+
+            continue
+
+        if expression.startswith("e+", cur_pos):
+            #  Create a positive electronic flag token.
+            r.append(create_positive_electronic_flag_token(len(r), cur_pos))
+
+            #  Go to next position.
+            cur_pos += 2
+
+            continue
+
+        if expression.startswith("e-", cur_pos):
+            #  Create a negative electronic flag token.
+            r.append(create_negative_electronic_flag_token(len(r), cur_pos))
+
+            #  Go to next position.
+            cur_pos += 2
 
             continue
 
         #  Raise an error if current character can't be tokenized.
-        err = _pe.Error(_ml_errors.PE_ML_UNRECOGNIZED_TOKEN,
+        err = _pe.Error(_ml_error.PE_ML_UNRECOGNIZED_TOKEN,
                         _msg_id.MSG_PE_ML_UNRECOGNIZED_TOKEN_DESCRIPTION,
                         options)
 
@@ -869,5 +872,8 @@ def tokenize(expression, options):
                               _msg_id.MSG_PE_ML_UNRECOGNIZED_TOKEN_TB_MESSAGE)
 
         raise err
+
+    #  Add an end token.
+    r.append(create_end_token(len(r), len(expression)))
 
     return r
