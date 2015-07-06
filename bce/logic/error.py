@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-#  Copyright 2014 The BCE Authors. All rights reserved.
+#  Copyright 2014 - 2015 The BCE Authors. All rights reserved.
 #  Use of this source code is governed by a BSD-style license that can be
 #  found in the license.txt file.
 #
@@ -10,12 +10,12 @@ import bce.locale.msg_id as _msg_id
 #  Add this for PyCharm auto-hinting.
 import bce.option as _opt
 
-LE_WRONG_SIDE = 101
-LE_SIDE_ELIMINATED = 102
-LE_NO_MOLECULE = 103
-LE_ZERO_COEFFICIENT = 104
-LE_MULTIPLE_ANSWER = 105
-LE_CONFLICT_EQUATIONS = 106
+LE_WRONG_SIDE = 100
+LE_SIDE_ELIMINATED = 101
+LE_NO_MOLECULE = 102
+LE_ZERO_COEFFICIENT = 103
+LE_MULTIPLE_ANSWER = 104
+LE_CONFLICT_EQUATIONS = 105
 
 
 class LogicError(Exception):

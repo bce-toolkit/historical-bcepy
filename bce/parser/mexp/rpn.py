@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-#  Copyright 2014 The BCE Authors. All rights reserved.
+#  Copyright 2014 - 2015 The BCE Authors. All rights reserved.
 #  Use of this source code is governed by a BSD-style license that can be
 #  found in the license.txt file.
 #
@@ -93,10 +93,12 @@ def calculate_rpn(origin_token_list, rpn_token_list, options):
                 err = _pe.Error(_mexp_errors.PE_MEXP_RPNEV_DIVIDE_ZERO,
                                 _msg_id.MSG_PE_MEXP_RPNEV_DIVIDE_ZERO_DESCRIPTION,
                                 options)
+
                 err.push_traceback_ex(_base_token.untokenize(origin_token_list),
                                       token.get_position(),
                                       token.get_position(),
                                       _msg_id.MSG_PE_MEXP_RPNEV_DIVIDE_ZERO_OPERATOR)
+
                 raise err
 
             #  Do power and push the result onto the stack.

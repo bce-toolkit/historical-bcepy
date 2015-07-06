@@ -1,0 +1,21 @@
+#  Number.
+1
+
+#  Fraction.
+2/3
+2/x
+x/y
+(a+b)/(c+d)
+
+#  Power.
+2^x
+x^2
+x^(2/3)
+
+#  Square root.
+sqrt(2)
+sqrt(x)
+(x+y)^(1/2)
+
+#  Protected header.
+Xab

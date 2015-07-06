@@ -1,0 +1,82 @@
+<math>
+    <mn>1</mn>
+</math>
+<math>
+    <mfrac>
+        <mn>2</mn>
+        <mn>3</mn>
+    </mfrac>
+</math>
+<math>
+    <mfrac>
+        <mn>2</mn>
+        <mtext>x</mtext>
+    </mfrac>
+</math>
+<math>
+    <mfrac>
+        <mtext>x</mtext>
+        <mtext>y</mtext>
+    </mfrac>
+</math>
+<math>
+    <mfrac>
+        <mrow>
+            <mtext>a</mtext>
+            <mo>+</mo>
+            <mtext>b</mtext>
+        </mrow>
+        <mrow>
+            <mtext>c</mtext>
+            <mo>+</mo>
+            <mtext>d</mtext>
+        </mrow>
+    </mfrac>
+</math>
+<math>
+    <msup>
+        <mn>2</mn>
+        <mtext>x</mtext>
+    </msup>
+</math>
+<math>
+    <msup>
+        <mtext>x</mtext>
+        <mn>2</mn>
+    </msup>
+</math>
+<math>
+    <msup>
+        <mtext>x</mtext>
+        <mfrac>
+            <mn>2</mn>
+            <mn>3</mn>
+        </mfrac>
+    </msup>
+</math>
+<math>
+    <msqrt>
+        <mn>2</mn>
+    </msqrt>
+</math>
+<math>
+    <msqrt>
+        <mtext>x</mtext>
+    </msqrt>
+</math>
+<math>
+    <msqrt>
+        <mrow>
+            <mtext>x</mtext>
+            <mo>+</mo>
+            <mtext>y</mtext>
+        </mrow>
+    </msqrt>
+</math>
+<math>
+    <msub>
+        <mtext>x</mtext>
+        <mtext>ab</mtext>
+    </msub>
+</math>
+

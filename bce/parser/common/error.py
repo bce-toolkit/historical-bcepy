@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-#  Copyright 2014 The BCE Authors. All rights reserved.
+#  Copyright 2014 - 2015 The BCE Authors. All rights reserved.
 #  Use of this source code is governed by a BSD-style license that can be
 #  found in the license.txt file.
 #
@@ -9,25 +9,72 @@ import bce.locale.msg_id as _msg_id
 
 
 class TracebackItem:
+    """Traceback description container class."""
+
     def __init__(self, expression, start_pos, end_pos, text):
+        """Initialize the class.
+
+        :type expression: str
+        :type start_pos: int
+        :type end_pos: int
+        :type text: str
+        :param expression: The expression.
+        :param start_pos: The starting position.
+        :param end_pos: The end position.
+        :param text: The error message.
+        """
+
         self.__expr = expression
         self.__s_pos = start_pos
         self.__e_pos = end_pos
         self.__txt = text
 
     def get_expression(self):
+        """Get the expression.
+
+        :rtype : str
+        :return: The expression.
+        """
+
         return self.__expr
 
     def get_start_position(self):
+        """Get the starting position.
+
+        :rtype : int
+        :return: The position.
+        """
+
         return self.__s_pos
 
     def get_end_position(self):
+        """Get the ending position.
+
+        :rtype : int
+        :return: The position.
+        """
+
         return self.__e_pos
 
     def get_text(self):
+        """Get the error message text.
+
+        :rtype : str
+        :return: The text.
+        """
+
         return self.__txt
 
     def to_string(self, left_margin=0, underline_char="^"):
+        """Convert the item to human-readable form(string).
+
+        :type left_margin: int
+        :type underline_char: str
+        :param left_margin: The count of left margin spaces.
+        :param underline_char: The underline character.
+        :return: The converted string.
+        """
+
         left_margin_str = " " * left_margin
         start_pos_margin_str = " " * self.__s_pos
 

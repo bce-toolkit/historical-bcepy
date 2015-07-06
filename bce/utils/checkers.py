@@ -1,15 +1,15 @@
 #!/usr/bin/env python
 #
-#  Copyright 2014 The BCE Authors. All rights reserved.
+#  Copyright 2014 - 2015 The BCE Authors. All rights reserved.
 #  Use of this source code is governed by a BSD-style license that can be
 #  found in the license.txt file.
 #
 
+import bce.math.constant as _math_cst
+import bce.math.equation as _math_equ
 import bce.parser.ce.token as _ce_token
 import bce.parser.ce.parser as _ce_parser
 import bce.logic.modeling as _model
-import bce.math.constant as _math_cst
-import bce.math.equation as _math_equ
 
 #  Add this for PyCharm auto-hinting.
 import bce.option as _opt

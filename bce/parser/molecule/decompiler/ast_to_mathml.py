@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-#  Copyright 2015 The BCE Authors. All rights reserved.
+#  Copyright 2014 - 2015 The BCE Authors. All rights reserved.
 #  Use of this source code is governed by a BSD-style license that can be
 #  found in the license.txt file.
 #
@@ -14,20 +14,30 @@ import bce.parser.molecule.status as _ml_status
 import bce.utils.mathml.all as _mathml
 
 
-def _decompile_operand(value, options):
+def _decompile_operand(value, need_wrapping, options):
     """Decompile an operand.
 
+    :type need_wrapping: bool
     :type options: _opt.Option
-    :param value: The operand value.
+    :param value: The operand value (must be simplified).
+    :param need_wrapping: Set to True if you need to wrap the expression when it is neither an integer nor a symbol.
+                          Otherwise, set to False.
     :param options: The BCE options.
     :return: The decompiled DOM node.
     """
 
-    #  WARN: $value must be simplified.
     if value.is_Integer:
         return _mathml.NumberComponent(str(value))
     else:
-        return _mexp_decompiler.decompile_mexp(value, options.get_protected_math_symbol_header())
+        if need_wrapping and not (value.is_Integer or value.is_Symbol):
+            #  Use a pair of parentheses to wrap the decompiled expression.
+            r = _mathml.RowComponent()
+            r.append_object(_mathml.OperatorComponent(_mathml.OPERATOR_LEFT_PARENTHESIS))
+            r.append_object(_mexp_decompiler.decompile_mexp(value, options.get_protected_math_symbol_header()))
+            r.append_object(_mathml.OperatorComponent(_mathml.OPERATOR_RIGHT_PARENTHESIS))
+            return r
+        else:
+            return _mexp_decompiler.decompile_mexp(value, options.get_protected_math_symbol_header())
 
 
 def _decompile_super_electronic(charge, options):
@@ -52,19 +62,8 @@ def _decompile_super_electronic(charge, options):
         #  Initialize a row component to contain the decompiling result.
         r = _mathml.RowComponent()
 
-        #  Get whether we need surrounding parentheses.
-        surround = not (charge.is_Integer or charge.is_Symbol)
-
-        #  Add left parenthesis if the flag was marked.
-        if surround:
-            r.append_object(_mathml.OperatorComponent(_mathml.OPERATOR_LEFT_PARENTHESIS))
-
         #  Decompile the charge part.
-        r.append_object(_decompile_operand(charge, options))
-
-        #  Add right parenthesis if the flag was marked.
-        if surround:
-            r.append_object(_mathml.OperatorComponent(_mathml.OPERATOR_RIGHT_PARENTHESIS))
+        r.append_object(_decompile_operand(charge, True, options))
 
         #  Add the positivity flag.
         r.append_object(positivity)
@@ -86,7 +85,7 @@ def _decompile_suffix(main_dom, node, options):
     #  Decompile the suffix number part.
     sfx = node.get_suffix_number().simplify()
     if sfx != _math_cst.ONE:
-        sfx_dom = _decompile_operand(sfx, options)
+        sfx_dom = _decompile_operand(sfx, False, options)
     else:
         sfx_dom = None
 
@@ -134,7 +133,7 @@ def decompile_ast(root_node, options):
             #  Decompile the prefix number part.
             pfx = work_node.get_prefix_number().simplify()
             if pfx != _math_cst.ONE:
-                build.append_object(_decompile_operand(pfx, options))
+                build.append_object(_decompile_operand(pfx, True, options))
                 build.append_object(_mathml.OperatorComponent(_mathml.OPERATOR_LEFT_PARENTHESIS))
                 surround = True
             else:
@@ -161,7 +160,7 @@ def decompile_ast(root_node, options):
             #  Decompile the prefix number part.
             pfx = work_node.get_prefix_number().simplify()
             if pfx != _math_cst.ONE:
-                build.append_object(_decompile_operand(pfx, options))
+                build.append_object(_decompile_operand(pfx, True, options))
 
             #  Decompile children nodes.
             for child_id in range(0, len(work_node)):

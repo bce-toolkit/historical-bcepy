@@ -7,7 +7,7 @@
 
 import bce.option as _opt
 import bce.parser.mexp.evaluate as _mexp_ev
-import bce.parser.mexp.decompiler.to_bce as _mexp_rp
+import bce.parser.mexp.decompiler.to_mathml as _mexp_rp
 import bce.parser.common.error as _pe
 import bce.utils.test_utils as _tu
 import bce.utils.sys_locale as _sl
@@ -23,6 +23,7 @@ def run_shell():
     #  Generate a new option instance.
     opt = _opt.Option()
     opt.set_message_language(_sl.get_system_locale_id())
+    opt.set_protected_math_symbol_header("_")
 
     while True:
         #  Input an expression.
@@ -37,7 +38,11 @@ def run_shell():
 
         #  Evaluate the expression and print it out.
         try:
-            print(_mexp_rp.decompile_mexp(_mexp_ev.evaluate_math_expression(expr, opt)))
+            inner = _mexp_rp.decompile_mexp(_mexp_ev.evaluate_math_expression(expr, opt),
+                                            "X").to_string(4)
+            print("<math>")
+            print(inner)
+            print("</math>")
         except _pe.Error as err:
             print(err.to_string())
 

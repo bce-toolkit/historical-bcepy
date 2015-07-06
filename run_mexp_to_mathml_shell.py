@@ -5,7 +5,7 @@
 #  found in the license.txt file.
 #
 
-import sympy as _sympy
+import bce.parser.mexp.test.mathml_decompiler as _ms
 
-ZERO = _sympy.Integer(0)
-ONE = _sympy.Integer(1)
+if __name__ == "__main__":
+    exit(_ms.run_shell())

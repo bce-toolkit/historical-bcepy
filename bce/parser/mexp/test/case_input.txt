@@ -1,0 +1,18 @@
+#  Normal expressions.
+56*32/(-(-(-1)))
+-1792*6/9.807
+
+#  Multi-level functions.
+sqrt(pow(2,pow(3,4)))
+
+#  Multiply completion.
+3pow(2,4)
+(1+2)(3+4)
+
+#  Test the associativity of '^' operator.
+1^2^3
+5^4^3
+
+#  Symbols
+x+y-x
+(x+2y+x)x

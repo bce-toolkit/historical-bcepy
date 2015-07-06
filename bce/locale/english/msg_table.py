@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-#  Copyright 2014-2015 The BCE Authors. All rights reserved.
+#  Copyright 2014 - 2015 The BCE Authors. All rights reserved.
 #  Use of this source code is governed by a BSD-style license that can be
 #  found in the license.txt file.
 #
@@ -38,7 +38,7 @@ MESSAGES = {
     MSG_PE_MEXP_ILLEGAL_ARG_SEPARATOR_DESCRIPTION: "Illegal argument separator.",
     MSG_PE_MEXP_ILLEGAL_ARG_SEPARATOR_TB_MESSAGE: "This argument separator was misplaced.",
     MSG_PE_MEXP_RPNEV_DIVIDE_ZERO_DESCRIPTION: "Divided zero.",
-    MSG_PE_MEXP_RPNEV_DIVIDE_ZERO_OPERATOR: "The right operand of this divide operator is zero.",
+    MSG_PE_MEXP_RPNEV_DIVIDE_ZERO_OPERATOR: "The right operand of this operator is zero.",
     MSG_PE_MEXP_RPNEV_DIVIDE_ZERO_POW: "The base number is zero when the exponent number is negative.",
     MSG_PE_MEXP_RPNEV_SQRT_NEG_ARG_DESCRIPTION: "Negative square root argument.",
     MSG_PE_MEXP_RPNEV_SQRT_NEG_ARG_TB_MESSAGE: "The argument of the sqrt() function is negative.",
