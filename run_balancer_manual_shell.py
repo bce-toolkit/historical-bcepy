@@ -6,10 +6,8 @@
 #
 
 import bce.option as _opt
-import bce.logic.error as _le
-import bce.parser.common.error as _pe
+import bce.api as _api
 import bce.utils.sys_locale as _sl
-import bce.logic.main as _m
 import bce.utils.test_utils as _tu
 
 if __name__ == "__main__":
@@ -32,11 +30,12 @@ if __name__ == "__main__":
 
         #  Balance chemical equation / expression and print it out.
         try:
-            print(_m.auto_balance_chemical_equation(expr, opt))
-        except _pe.Error as err1:
-            print(err1.to_string())
-        except _le.LogicError as err2:
-            print(err2.to_string())
+            result = _api.balance_chemical_equation(expr, [_api.DECOMPILER_TEXT], opt)[0]
+            print(result)
+        except _api.ParserErrorWrapper as err1:
+            print(str(err1))
+        except _api.LogicErrorWrapper as err2:
+            print(str(err2))
 
     #  Print an empty line.
     print("")

@@ -7,9 +7,9 @@
 
 import bce.option as _opt
 import bce.math.constant as _math_cst
-import bce.parser.mexp.decompiler.to_mathml as _mexp_decompiler
-import bce.parser.molecule.ast_base as _ml_ast_base
-import bce.parser.molecule.ast_utils as _ml_ast_utils
+import bce.decompiler.mexp.to_mathml as _mexp_decompiler
+import bce.parser.molecule.ast.base as _ml_ast_base
+import bce.parser.molecule.ast.bfs as _ml_ast_bfs
 import bce.parser.molecule.status as _ml_status
 import bce.utils.mathml.all as _mathml
 
@@ -89,28 +89,17 @@ def _decompile_suffix(main_dom, node, options):
     else:
         sfx_dom = None
 
-    #  Decompile the electronic part.
-    charge = node.get_suffix_electronic().simplify()
-    if not charge.is_zero:
-        chg_dom = _decompile_super_electronic(charge, options)
-    else:
-        chg_dom = None
-
     #  Do combination and return.
-    if sfx_dom is None and chg_dom is None:
+    if sfx_dom is None:
         return main_dom
-    elif sfx_dom is None and chg_dom is not None:
-        return _mathml.SuperComponent(main_dom, chg_dom)
-    elif sfx_dom is not None and chg_dom is None:
-        return _mathml.SubComponent(main_dom, sfx_dom)
     else:
-        return _mathml.SubAndSuperComponent(main_dom, sfx_dom, chg_dom)
+        return _mathml.SubComponent(main_dom, sfx_dom)
 
 
 def decompile_ast(root_node, options):
     """Decompile an AST to BCE expression.
 
-    :type root_node: _ml_ast_base._ASTNodeBaseML
+    :type root_node: _ml_ast_base.ASTNodeHydrateGroup | _ml_ast_base.ASTNodeMolecule
     :type options: _opt.Option
     :param root_node: The root node of the AST.
     :param options: The BCE options.
@@ -118,7 +107,7 @@ def decompile_ast(root_node, options):
     """
 
     #  Get the decompile order.
-    work_order = _ml_ast_utils.do_bfs(root_node, True)
+    work_order = _ml_ast_bfs.do_bfs(root_node, True)
 
     #  Initialize the decompiling result container.
     decompiled = {}
@@ -166,25 +155,24 @@ def decompile_ast(root_node, options):
             for child_id in range(0, len(work_node)):
                 build.append_object(decompiled[id(work_node[child_id])])
 
-            status = work_node.get_status()
-            if status == _ml_status.STATUS_GAS:
-                build.append_object(_mathml.OperatorComponent(_mathml.OPERATOR_LEFT_PARENTHESIS))
-                build.append_object(_mathml.TextComponent("g"))
-                build.append_object(_mathml.OperatorComponent(_mathml.OPERATOR_RIGHT_PARENTHESIS))
-            elif status == _ml_status.STATUS_LIQUID:
-                build.append_object(_mathml.OperatorComponent(_mathml.OPERATOR_LEFT_PARENTHESIS))
-                build.append_object(_mathml.TextComponent("l"))
-                build.append_object(_mathml.OperatorComponent(_mathml.OPERATOR_RIGHT_PARENTHESIS))
-            elif status == _ml_status.STATUS_SOLID:
-                build.append_object(_mathml.OperatorComponent(_mathml.OPERATOR_LEFT_PARENTHESIS))
-                build.append_object(_mathml.TextComponent("s"))
-                build.append_object(_mathml.OperatorComponent(_mathml.OPERATOR_RIGHT_PARENTHESIS))
-            elif status == _ml_status.STATUS_AQUEOUS:
-                build.append_object(_mathml.OperatorComponent(_mathml.OPERATOR_LEFT_PARENTHESIS))
-                build.append_object(_mathml.TextComponent("aq"))
-                build.append_object(_mathml.OperatorComponent(_mathml.OPERATOR_RIGHT_PARENTHESIS))
-            else:
-                pass
+            el_charge = work_node.get_electronic_count().simplify()
+            if not el_charge.is_zero:
+                if len(build) == 0:
+                    build.append_object(_mathml.SuperComponent(_mathml.TextComponent("e"),
+                                                               _decompile_super_electronic(
+                                                                   el_charge,
+                                                                   options)))
+                else:
+                    last_item = build[-1]
+                    if last_item.is_sub():
+                        assert isinstance(last_item, _mathml.SubComponent)
+                        last_item = _mathml.SubAndSuperComponent(last_item.get_main_object(),
+                                                                 last_item.get_sub_object(),
+                                                                 _decompile_super_electronic(el_charge, options))
+                    else:
+                        last_item = _mathml.SuperComponent(last_item,
+                                                           _decompile_super_electronic(el_charge, options))
+                    build[-1] = last_item
 
             #  Save decompiling result.
             decompiled[id(work_node)] = build
@@ -210,14 +198,6 @@ def decompile_ast(root_node, options):
 
             #  Save decompiling result.
             decompiled[id(work_node)] = build
-        elif work_node.is_electronic():
-            assert isinstance(work_node, _ml_ast_base.ASTNodeElectronic)
-
-            #  Decompile and save the result.
-            decompiled[id(work_node)] = _mathml.SuperComponent(_mathml.TextComponent("e"),
-                                                               _decompile_super_electronic(
-                                                                   work_node.get_electronic_count().simplify(),
-                                                                   options))
         elif work_node.is_abbreviation():
             assert isinstance(work_node, _ml_ast_base.ASTNodeAbbreviation)
 
@@ -228,5 +208,24 @@ def decompile_ast(root_node, options):
                 options)
         else:
             raise RuntimeError("Never reach this condition.")
+
+    post_process = decompiled[id(root_node)]
+    if root_node.get_status() is not None:
+        if not post_process.is_row():
+            tmp = _mathml.RowComponent()
+            tmp.append_object(post_process)
+            post_process = tmp
+        post_process.append_object(_mathml.OperatorComponent(_mathml.OPERATOR_LEFT_PARENTHESIS))
+        if root_node.get_status() == _ml_status.STATUS_GAS:
+            post_process.append_object(_mathml.TextComponent("g"))
+        elif root_node.get_status() == _ml_status.STATUS_LIQUID:
+            post_process.append_object(_mathml.TextComponent("l"))
+        elif root_node.get_status() == _ml_status.STATUS_SOLID:
+            post_process.append_object(_mathml.TextComponent("s"))
+        elif root_node.get_status() == _ml_status.STATUS_AQUEOUS:
+            post_process.append_object(_mathml.TextComponent("aq"))
+        else:
+            raise RuntimeError("BUG: No such molecule status.")
+        post_process.append_object(_mathml.OperatorComponent(_mathml.OPERATOR_RIGHT_PARENTHESIS))
 
     return decompiled[id(root_node)]

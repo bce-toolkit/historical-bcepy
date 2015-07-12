@@ -5,48 +5,43 @@
 #  found in the license.txt file.
 #
 
-import bce.option as _opt
-import bce.parser.ce.parser as _ce_parser
-import bce.parser.molecule.ast_base as _ml_ast_base
-import bce.parser.molecule.decompiler.ast_to_mathml as _ml_decompiler
+import bce.decompiler.molecule.ast_to_mathml as _ml_decompiler
+import bce.math.constant as _math_cst
+import bce.parser.ce.base as _ce_base
 import bce.utils.mathml.all as _mathml
-import bce.logic.arrange as _logic_arrange
+import bce.option as _opt
 
 
-def decompile_combined_result(combined_result, options):
+def decompile_ce(ce, options):
     """Decompile the combined balanced result to a human-readable form (string).
 
+    :type ce: _ce_base.ChemicalEquation
     :type options: _opt.Option
-    :type combined_result: _logic_arrange.CombinedResult
-    :param combined_result: The combined result.
+    :param ce: The chemical equation (represented by ChemicalEquation class).
     :param options: The BCE options.
-    :return: The rebuilt result.
+    :return: The decompiling result.
     """
+
+    assert ce.get_left_item_count() != 0 and ce.get_right_item_count() != 0
 
     #  Initialize an empty CE expression.
     r = _mathml.RowComponent()
 
-    #  Cache items on left and right side.
-    li = combined_result.get_left_items()
-    ri = combined_result.get_right_items()
-
     #  Process items on left side.
-    for item in li:
+    for idx in range(0, ce.get_left_item_count()):
+        #  Get the item.
+        item = ce.get_left_item(idx)
+
         #  Insert operator.
-        if item.get_operator() == _ce_parser.PARSED_CE_ITEM_OP_PLUS:
+        if item.is_operator_plus():
             if len(r) != 0:
                 r.append_object(_mathml.OperatorComponent(_mathml.OPERATOR_PLUS))
 
-        if item.get_operator() == _ce_parser.PARSED_CE_ITEM_OP_MINUS:
+        if item.is_operator_minus():
             r.append_object(_mathml.OperatorComponent(_mathml.OPERATOR_MINUS))
 
         #  Get the AST root node.
-        ast_root = item.get_molecule()
-        assert isinstance(ast_root, _ml_ast_base.ASTNodeHydrateGroup) or \
-            isinstance(ast_root, _ml_ast_base.ASTNodeMolecule)
-
-        #  Save origin prefix number.
-        origin_pfx = ast_root.get_prefix_number()
+        ast_root = item.get_molecule_ast()
 
         #  Set the prefix to the balanced coefficient.
         ast_root.set_prefix_number(item.get_coefficient())
@@ -55,7 +50,7 @@ def decompile_combined_result(combined_result, options):
         r.append_object(_ml_decompiler.decompile_ast(ast_root, options))
 
         #  Restore the prefix number.
-        ast_root.set_prefix_number(origin_pfx)
+        ast_root.set_prefix_number(_math_cst.ONE)
 
     #  Insert '='.
     r.append_object(_mathml.OperatorComponent(_mathml.OPERATOR_EQUAL))
@@ -64,22 +59,20 @@ def decompile_combined_result(combined_result, options):
     r_is_first = True
 
     #  Process items on right side.
-    for item in ri:
+    for idx in range(0, ce.get_right_item_count()):
+        #  Get the item.
+        item = ce.get_right_item(idx)
+
         #  Insert operator.
-        if item.get_operator() == _ce_parser.PARSED_CE_ITEM_OP_PLUS:
+        if item.is_operator_plus():
             if not r_is_first:
                 r.append_object(_mathml.OperatorComponent(_mathml.OPERATOR_PLUS))
 
-        if item.get_operator() == _ce_parser.PARSED_CE_ITEM_OP_MINUS:
+        if item.is_operator_minus():
             r.append_object(_mathml.OperatorComponent(_mathml.OPERATOR_MINUS))
 
         #  Get the AST root node.
-        ast_root = item.get_molecule()
-        assert isinstance(ast_root, _ml_ast_base.ASTNodeHydrateGroup) or \
-            isinstance(ast_root, _ml_ast_base.ASTNodeMolecule)
-
-        #  Save origin prefix number.
-        origin_pfx = ast_root.get_prefix_number()
+        ast_root = item.get_molecule_ast()
 
         #  Set the prefix to the balanced coefficient.
         ast_root.set_prefix_number(item.get_coefficient())
@@ -88,7 +81,7 @@ def decompile_combined_result(combined_result, options):
         r.append_object(_ml_decompiler.decompile_ast(ast_root, options))
 
         #  Restore the prefix number.
-        ast_root.set_prefix_number(origin_pfx)
+        ast_root.set_prefix_number(_math_cst.ONE)
 
         #  Switch off the mark.
         r_is_first = False

@@ -67,7 +67,7 @@ class Message:
             msg = _msg_t_english.MESSAGES[msg_id]
 
         #  Replace each |keyword| in the message with the mapped value of |keyword| in the replace map.
-        if not replace_map is None:
+        if replace_map is not None:
             for keyword in replace_map:
                 msg = msg.replace(keyword, replace_map[keyword])
 

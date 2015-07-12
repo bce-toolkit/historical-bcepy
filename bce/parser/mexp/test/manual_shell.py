@@ -7,7 +7,7 @@
 
 import bce.option as _opt
 import bce.parser.mexp.evaluate as _mexp_ev
-import bce.parser.mexp.decompiler.to_bce as _mexp_rp
+import bce.decompiler.mexp.to_bce as _mexp_rp
 import bce.parser.common.error as _pe
 import bce.utils.test_utils as _tu
 import bce.utils.sys_locale as _sl

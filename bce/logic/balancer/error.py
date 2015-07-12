@@ -1,0 +1,10 @@
+#!/usr/bin/env python
+#
+#  Copyright 2014 - 2015 The BCE Authors. All rights reserved.
+#  Use of this source code is governed by a BSD-style license that can be
+#  found in the license.txt file.
+#
+
+LE_BCE_SIDE_ELIMINATED = "LE.BCE.SEL"
+LE_BCE_AUTO_ARRANGE_WITH_MULTIPLE_ANSWER = "LE.BCE.ARMW"
+LE_BCE_CONFLICT_EQUATIONS = "LE.BCE.CFX"

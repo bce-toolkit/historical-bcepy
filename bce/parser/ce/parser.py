@@ -6,185 +6,299 @@
 #
 
 import bce.parser.common.error as _pe
-import bce.parser.molecule.auto as _ml_auto
-import bce.parser.molecule.ast_parser as _ml_ast_parser
+import bce.math.constant as _math_cst
+import bce.parser.molecule.token as _ml_token
+import bce.parser.molecule.ast.generator as _ml_ast_generator
+import bce.parser.molecule.ast.parser as _ml_ast_parser
+import bce.parser.ce.token as _ce_token
+import bce.parser.ce.base as _ce_base
+import bce.parser.ce.operator as _ce_op
 import bce.locale.msg_id as _msg_id
 import bce.option as _opt
+import bce.parser.ce.error as _ce_error
 
-#  Item sides.
-PARSED_CE_ITEM_SIDE_LEFT = 1
-PARSED_CE_ITEM_SIDE_RIGHT = 2
+#  States of the state machine.
+_STATE_ROUTE_1 = 1
+_STATE_READ_MINUS_1 = 2
+_STATE_READ_MOLECULE = 3
+_STATE_ROUTE_2 = 4
+_STATE_READ_PLUS = 5
+_STATE_READ_MINUS_2 = 6
+_STATE_READ_SEPARATOR = 7
+_STATE_READ_EQUAL_SIGN = 8
 
-#  Item operators.
-PARSED_CE_ITEM_OP_PLUS = 1
-PARSED_CE_ITEM_OP_MINUS = 2
-
-
-class ParsedCEItem:
-    """Item class of ParsedCE class."""
-
-    def __init__(self, op, parsed_ml):
-        """Initialize the class with specific operator and the parsed molecule.
-
-        :type op: int
-        :type parsed_ml: _ml_ast_parser.ResultContainer
-        :param op: The operator before the molecule.
-        :param parsed_ml: The parsed molecule data.
-        """
-
-        self.__o = op
-        self.__m = parsed_ml
-
-    def get_operator(self):
-        """Get the operator.
-
-        :rtype : int
-        :return: The operator (one of PARSED_CE_ITEM_OP_*).
-        """
-
-        return self.__o
-
-    def is_plus_operator(self):
-        """Get whether the token is a plus operator token.
-
-        :rtype : bool
-        :return: True if so.
-        """
-
-        return self.__o == PARSED_CE_ITEM_OP_PLUS
-
-    def is_minus_operator(self):
-        """Get whether the token is a minus operator token.
-
-        :rtype : bool
-        :return: True if so.
-        """
-
-        return self.__o == PARSED_CE_ITEM_OP_MINUS
-
-    def get_molecule(self):
-        """Get the parsed molecule.
-
-        :rtype : _ml_ast_parser.ResultContainer
-        :return: The parsed molecule.
-        """
-
-        return self.__m
+#  Chemical equation forms.
+_FORM_NORMAL = 1
+_FORM_AUTO_CORRECTION = 2
 
 
-class ParsedCE:
-    """Class for containing parsed chemical equation."""
+def _macro_register_form(expression, origin_form, new_form, options):
+    if origin_form is not None and origin_form != new_form:
+        err = _pe.Error(_ce_error.PE_CE_MIXED_FORM,
+                        _msg_id.MSG_PE_CE_MIXED_FORM_DESCRIPTION,
+                        options)
 
-    def __init__(self, left_items, right_items, form):
-        """Initialize the class with specific items on left side and right side and the
-        form of the chemical equation.
+        err.push_traceback_ex(expression,
+                              0,
+                              len(expression) - 1,
+                              _msg_id.MSG_PE_CE_MIXED_FORM_TB_MESSAGE)
 
-        :type left_items: list
-        :type right_items: list
-        :type form: int
-        :param left_items: Items on left side.
-        :param right_items: Items on right side.
-        :param form: Form indicator (one of TOKENIZED_CE_FORM_* in bce.parser.ce.token).
-        """
+        raise err
 
-        self.__l = left_items
-        self.__r = right_items
-        self.__f = form
-
-    def get_left_items(self):
-        """Get items on left side.
-
-        :rtype : list of ParsedCEItem
-        :return: A list contains items on left side.
-        """
-
-        return self.__l
-
-    def get_right_items(self):
-        """Get items on right side.
-
-        :rtype : list of ParsedCEItem
-        :return: A list contains items on right side.
-        """
-
-        return self.__r
-
-    def get_form(self):
-        """Get the form of the chemical equation.
-
-        :rtype : int
-        :return: The form indicator (one of TOKENIZED_CE_FORM_* in bce.parser.ce.token).
-        """
-
-        return self.__f
+    return new_form
 
 
-def parse(expression, tokenized_ce, remove_ml_prefix, options):
+def parse(expression, token_list, options):
     """Parse the tokenized chemical equation.
 
     :type expression: str
-    :type tokenized_ce: _ml_token.TokenizedCE
-    :type remove_ml_prefix: bool
+    :type token_list: list[_ce_token.Token]
     :type options: _opt.Option
     :param expression: Origin chemical equation.
-    :param tokenized_ce: The tokenized chemical equation.
-    :param remove_ml_prefix: Set to True if you want to remove the molecule prefixes. Otherwise, set to False.
+    :param token_list: The tokenized chemical equation.
     :param options: The BCE options.
-    :rtype : ParsedCE
+    :rtype : _ce_base.ChemicalEquation
     :return: The parsed chemical equation.
-    :raise RuntimeError: When a bug appears.
     """
 
-    #  Initialize.
-    cur_side = PARSED_CE_ITEM_SIDE_LEFT
-    cur_op = PARSED_CE_ITEM_OP_PLUS
-    r_left = []
-    r_right = []
-    token_list = tokenized_ce.get_token_list()
+    #  Initialize an empty chemical equation.
+    ret = _ce_base.ChemicalEquation()
 
-    for token in token_list:
-        if token.is_equal():
-            #  Set current side to right side.
-            cur_side = PARSED_CE_ITEM_SIDE_RIGHT
-            cur_op = PARSED_CE_ITEM_OP_PLUS
-            continue
-        elif token.is_operator_plus() or token.is_operator_separator():
-            #  Set current operator to plus operator.
-            cur_op = PARSED_CE_ITEM_OP_PLUS
-            continue
-        elif token.is_operator_minus():
-            #  Set current operator to minus operator.
-            cur_op = PARSED_CE_ITEM_OP_MINUS
-            continue
-        elif token.is_molecule():
-            #  Get molecule expression.
-            ml_symbol = token.get_symbol()
+    #  Initialize the sign.
+    operator = _ce_op.OPERATOR_PLUS
+
+    #  Initialize the form container.
+    form = None
+
+    #  Initialize the side mark.
+    #  (side == False: Left side; side == True: Right side;)
+    side = False
+
+    #  Initialize the state.
+    state = _STATE_ROUTE_1
+
+    #  Initialize other variables.
+    read_molecule_end = None
+    equal_sign_position = -1
+
+    #  Initialize the token cursor.
+    cursor = 0
+    while True:
+        token = token_list[cursor]
+
+        if state == _STATE_ROUTE_1:
+            #  Reset the operator to '+'.
+            operator = _ce_op.OPERATOR_PLUS
+
+            #  Redirect by rules.
+            if token.is_operator_minus():
+                #  Go to read the '-'.
+                state = _STATE_READ_MINUS_1
+            else:
+                #  Go and try to read a molecule.
+                read_molecule_end = _STATE_ROUTE_2
+                state = _STATE_READ_MOLECULE
+        elif state == _STATE_READ_MINUS_1:
+            #  Register the new form.
+            form = _macro_register_form(expression, form, _FORM_NORMAL, options)
+
+            #  Set the operator to '-'.
+            operator = _ce_op.OPERATOR_MINUS
+
+            #  Next token.
+            cursor += 1
+
+            #  Go to read-molecule state.
+            read_molecule_end = _STATE_ROUTE_2
+            state = _STATE_READ_MOLECULE
+        elif state == _STATE_READ_MOLECULE:
+            if not token.is_molecule():
+                if token.is_end():
+                    if cursor == 0:
+                        #  In this condition, we got an empty expression. Raise an error.
+                        err = _pe.Error(_ce_error.PE_CE_EMPTY_EXPRESSION,
+                                        _msg_id.MSG_PE_CE_EMPTY_EXPRESSION_DESCRIPTION,
+                                        options)
+
+                        raise err
+                    else:
+                        #  There is no content between the end token and previous token. Raise an error.
+                        err = _pe.Error(_ce_error.PE_CE_NO_CONTENT,
+                                        _msg_id.MSG_PE_CE_NO_CONTENT_DESCRIPTION,
+                                        options)
+
+                        err.push_traceback_ex(expression,
+                                              token.get_position() - 1,
+                                              token.get_position() - 1,
+                                              _msg_id.MSG_PE_CE_NO_CONTENT_OPERATOR_AFTER)
+
+                        raise err
+                else:
+                    err = _pe.Error(_ce_error.PE_CE_NO_CONTENT,
+                                    _msg_id.MSG_PE_CE_NO_CONTENT_DESCRIPTION,
+                                    options)
+                    if cursor == 0:
+                        #  There is no content before this token. Raise an error.
+                        err.push_traceback_ex(expression,
+                                              token.get_position(),
+                                              token.get_position(),
+                                              _msg_id.MSG_PE_CE_NO_CONTENT_OPERATOR_BEFORE)
+                    else:
+                        #  There is no content between this token and previous token. Raise an error.
+                        err.push_traceback_ex(expression,
+                                              token.get_position() - 1,
+                                              token.get_position(),
+                                              _msg_id.MSG_PE_CE_NO_CONTENT_OPERATOR_BETWEEN)
+
+                    raise err
 
             try:
-                #  Tokenize and parse the molecule.
-                ml_parsed = _ml_auto.tokenize_and_parse_molecule(ml_symbol, remove_ml_prefix, options)
+                #  Tokenize the molecule.
+                ml_token_list = _ml_token.tokenize(token.get_symbol(), options)
+                #  Generate the AST.
+                ml_ast_root = _ml_ast_generator.generate_ast(token.get_symbol(), ml_token_list, options)
 
-                #  Create a new item.
-                new_item = ParsedCEItem(cur_op, ml_parsed)
+                #  Separate the coefficient from the AST.
+                ml_coeff = ml_ast_root.get_prefix_number()
+                ml_ast_root.set_prefix_number(_math_cst.ONE)
+                ml_atoms_dict = _ml_ast_parser.parse_ast(token.get_symbol(), ml_ast_root, options)
 
-                #  Append the item to the list of its side.
-                if cur_side == PARSED_CE_ITEM_SIDE_LEFT:
-                    r_left.append(new_item)
+                #  Add the molecule to the chemical equation.
+                if side:
+                    ret.append_right_item(operator, ml_coeff, ml_ast_root, ml_atoms_dict)
                 else:
-                    r_right.append(new_item)
+                    ret.append_left_item(operator, ml_coeff, ml_ast_root, ml_atoms_dict)
             except _pe.Error as err:
-                #  Add note about where the error raised from.
+                #  Add error description.
                 err.push_traceback_ex(expression,
                                       token.get_position(),
-                                      token.get_position() + len(ml_symbol) - 1,
+                                      token.get_position() + len(token.get_symbol()) - 1,
                                       _msg_id.MSG_PE_CE_SUB_ML_ERROR_TRACE_MESSAGE)
 
-                #  Re-raise the error.
                 raise err
 
-            continue
-        else:
-            #  We should never reach this condition.
-            raise RuntimeError("Unreachable condition (invalid token type).")
+            #  Next token.
+            cursor += 1
 
-    return ParsedCE(r_left, r_right, tokenized_ce.get_form())
+            #  Redirect by pre-saved state.
+            state = read_molecule_end
+        elif state == _STATE_ROUTE_2:
+            #  Redirect by rules.
+            if token.is_operator_plus():
+                state = _STATE_READ_PLUS
+            elif token.is_operator_minus():
+                state = _STATE_READ_MINUS_2
+            elif token.is_operator_separator():
+                state = _STATE_READ_SEPARATOR
+            elif token.is_equal():
+                state = _STATE_READ_EQUAL_SIGN
+            elif token.is_end():
+                break
+            else:
+                raise RuntimeError("BUG: Unexpected token (should never happen).")
+        elif state == _STATE_READ_PLUS:
+            #  Register the new form.
+            form = _macro_register_form(expression, form, _FORM_NORMAL, options)
+
+            #  Set the operator to '+'.
+            operator = _ce_op.OPERATOR_PLUS
+
+            #  Next token.
+            cursor += 1
+
+            #  Go to read-molecule state.
+            read_molecule_end = _STATE_ROUTE_2
+            state = _STATE_READ_MOLECULE
+        elif state == _STATE_READ_MINUS_2:
+            #  Register the new form.
+            form = _macro_register_form(expression, form, _FORM_NORMAL, options)
+
+            #  Set the operator to '-'.
+            operator = _ce_op.OPERATOR_MINUS
+
+            #  Next token.
+            cursor += 1
+
+            #  Go to read-molecule state.
+            read_molecule_end = _STATE_ROUTE_2
+            state = _STATE_READ_MOLECULE
+        elif state == _STATE_READ_SEPARATOR:
+            #  Register the new form.
+            form = _macro_register_form(expression, form, _FORM_AUTO_CORRECTION, options)
+
+            #  Set the operator to '+'.
+            operator = _ce_op.OPERATOR_PLUS
+
+            #  Next token.
+            cursor += 1
+
+            #  Go to read-molecule state.
+            read_molecule_end = _STATE_ROUTE_2
+            state = _STATE_READ_MOLECULE
+        elif state == _STATE_READ_EQUAL_SIGN:
+            #  Register the new form.
+            form = _macro_register_form(expression, form, _FORM_NORMAL, options)
+
+            #  Next token.
+            cursor += 1
+
+            #  Raise an error if the equal sign is duplicated.
+            if side:
+                err = _pe.Error(_ce_error.PE_CE_DUPLICATED_EQUAL_SIGN,
+                                _msg_id.MSG_PE_CE_DUPLICATED_EQUAL_SIGN_DESCRIPTION,
+                                options)
+
+                err.push_traceback_ex(expression,
+                                      token.get_position(),
+                                      token.get_position(),
+                                      _msg_id.MSG_PE_CE_DUPLICATED_EQUAL_SIGN_DUPLICATED)
+
+                err.push_traceback_ex(expression,
+                                      equal_sign_position,
+                                      equal_sign_position,
+                                      _msg_id.MSG_PE_CE_DUPLICATED_EQUAL_SIGN_PREVIOUS)
+
+                raise err
+
+            #  Save the position of the equal sign.
+            equal_sign_position = token.get_position()
+
+            #  Mark the side flag.
+            side = True
+
+            #  Go to route 1.
+            state = _STATE_ROUTE_1
+        else:
+            raise RuntimeError("BUG: Unexpected state.")
+
+    #  Raise an error if there is only 1 molecule.
+    if len(ret) == 1:
+        err = _pe.Error(_ce_error.PE_CE_ONLY_ONE_MOLECULE,
+                        _msg_id.MSG_PE_CE_ONLY_ONE_MOLECULE_DESCRIPTION,
+                        options)
+
+        err.push_traceback_ex(expression,
+                              0,
+                              len(expression) - 1,
+                              _msg_id.MSG_PE_CE_ONLY_ONE_MOLECULE_TB_MESSAGE)
+
+        raise err
+
+    #  Check form.
+    if form is None:
+        raise RuntimeError("BUG: Form was not set.")
+
+    #  Raise an error if there is no equal sign (for normal form only).
+    if form == _FORM_NORMAL and not side:
+        err = _pe.Error(_ce_error.PE_CE_NO_EQUAL_SIGN,
+                        _msg_id.MSG_PE_CE_NO_EQUAL_SIGN_DESCRIPTION,
+                        options)
+
+        err.push_traceback_ex(expression,
+                              0,
+                              len(expression) - 1,
+                              _msg_id.MSG_PE_CE_NO_EQUAL_SIGN_TB_MESSAGE)
+
+        raise err
+
+    return ret

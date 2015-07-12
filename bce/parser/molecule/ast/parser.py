@@ -6,11 +6,10 @@
 #
 
 import bce.parser.common.error as _pe
-import bce.parser.molecule.ast_utils as _ast_utils
+import bce.parser.molecule.ast.bfs as _ast_bfs
 import bce.parser.molecule.abbreviation as _ml_abbr
 import bce.parser.molecule.error as _ml_error
-import bce.parser.molecule.ast_base as _ast_base
-import bce.parser.molecule.status as _ml_status
+import bce.parser.molecule.ast.base as _ast_base
 import bce.locale.msg_id as _msg_id
 import bce.option as _opt
 
@@ -118,97 +117,6 @@ class MergeUtil:
         return self.__data
 
 
-class ResultContainer:
-    """Parse result container."""
-
-    def __init__(self, ast_root, status_id, atom_dict):
-        """Initialize the class.
-
-        :type ast_root: _ast_base._ASTNodeBaseML
-        :type status_id: int | None
-        :type atom_dict: dict
-        :param ast_root: The root node of the AST.
-        :param status_id: The status ID (if there is no status, set the parameter to None).
-        :param atom_dict: The atom dictionary.
-        """
-
-        self.__ast = ast_root
-        self.__status = status_id
-        self.__atoms = atom_dict
-
-    def get_ast_root(self):
-        """Get the root node of the AST.
-
-        :rtype : _ast_base._ASTNodeBaseML
-        :return: The root node.
-        """
-
-        return self.__ast
-
-    def get_atom_dictionary(self):
-        """Get the atom dictionary.
-
-        :rtype : dict
-        :return: The dictionary.
-        """
-
-        return self.__atoms
-
-    def has_status(self):
-        """Get whether the molecule has one status.
-
-        :rtype : bool
-        :return: True if so. Otherwise, return False.
-        """
-
-        return self.__status is not None
-
-    def is_gas_status(self):
-        """Get whether the molecule is in gas status.
-
-        :rtype : bool
-        :return: True if so. Otherwise, return False.
-        """
-
-        return self.__status == _ml_status.STATUS_GAS
-
-    def is_liquid_status(self):
-        """Get whether the molecule is in liquid status.
-
-        :rtype : bool
-        :return: True if so. Otherwise, return False.
-        """
-
-        return self.__status == _ml_status.STATUS_LIQUID
-
-    def is_solid_status(self):
-        """Get whether the molecule is in solid status.
-
-        :rtype : bool
-        :return: True if so. Otherwise, return False.
-        """
-
-        return self.__status == _ml_status.STATUS_SOLID
-
-    def is_aqueous_status(self):
-        """Get whether the molecule is in aqueous status.
-
-        :rtype : bool
-        :return: True if so. Otherwise, return False.
-        """
-
-        return self.__status == _ml_status.STATUS_AQUEOUS
-
-    def is_hydrate(self):
-        """Get whether the molecule is a hydrate molecule.
-
-        :rtype : bool
-        :return: True if so. Otherwise, return False.
-        """
-
-        return self.__ast.is_hydrate_group()
-
-
 def _macro_simplify(expression, mu_obj, node, options):
     """Macro for simplifying.
 
@@ -254,20 +162,17 @@ def parse_ast(expression, root_node, options):
     """Parse an AST.
 
     :type expression: str
-    :type root_node: _ast_base._ASTNodeBaseML
+    :type root_node: _ast_base.ASTNodeHydrateGroup | _ast_base.ASTNodeMolecule
     :type options: _opt.Option
     :param expression: The origin expression.
     :param root_node: The root node of the AST.
     :param options: The BCE options.
-    :rtype : ResultContainer
-    :return: An instance of ResultContainer that contains the result.
+    :rtype : dict
+    :return: The parsed atoms dictionary.
     """
 
     #  Get the iteration order.
-    work_list = _ast_utils.do_bfs(root_node, True)
-
-    #  Initialize the status container.
-    status = None
+    work_list = _ast_bfs.do_bfs(root_node, True)
 
     #  Initialize the parsed node container.
     parsed = {}
@@ -277,13 +182,19 @@ def parse_ast(expression, root_node, options):
     for work_node in work_list:
         if work_node.is_hydrate_group() or work_node.is_molecule():
             assert isinstance(work_node, _ast_base.ASTNodeHydrateGroup) or \
-                   isinstance(work_node, _ast_base.ASTNodeMolecule)
+                isinstance(work_node, _ast_base.ASTNodeMolecule)
 
             #  Get the prefix number.
             coeff = work_node.get_prefix_number()
 
             #  Initialize a new merge utility.
             build = MergeUtil()
+
+            #  Process the electronics.
+            if work_node.is_molecule():
+                el_charge = work_node.get_electronic_count().simplify()
+                if not el_charge.is_zero:
+                    build.add("e", el_charge * coeff)
 
             #  Iterate all children.
             for child_id in range(0, len(work_node)):
@@ -292,7 +203,7 @@ def parse_ast(expression, root_node, options):
                 child_parsed = parsed[id(child)]
 
                 #  Content check.
-                if work_node.is_hydrate_group() and (len(child) == 0 or len(child_parsed) == 0):
+                if work_node.is_hydrate_group() and len(child_parsed) == 0:
                     assert isinstance(child, _ast_base.ASTNodeMolecule)
 
                     err = _pe.Error(_ml_error.PE_ML_NO_CONTENT,
@@ -325,12 +236,6 @@ def parse_ast(expression, root_node, options):
 
             #  Save the parsed result.
             parsed[id(work_node)] = build
-
-            #  Save the molecule status if has.
-            if work_node.is_molecule():
-                new_status = work_node.get_status()
-                if new_status is not None and status is None:
-                    status = new_status
         elif work_node.is_atom():
             assert isinstance(work_node, _ast_base.ASTNodeAtom)
 
@@ -343,11 +248,6 @@ def parse_ast(expression, root_node, options):
             #  Add the atom.
             build.add(work_node.get_atom_symbol(), coeff)
 
-            #  Add electronics if has.
-            node_charge = work_node.get_suffix_electronic().simplify()
-            if not node_charge.is_zero:
-                build.add("e", coeff * node_charge)
-
             #  Save the parsed result.
             parsed[id(work_node)] = build
         elif work_node.is_parenthesis():
@@ -359,17 +259,11 @@ def parse_ast(expression, root_node, options):
             #  Initialize a new merge utility.
             build = MergeUtil()
 
-            #  Add electronics if has.
-            node_charge = work_node.get_suffix_electronic().simplify()
-            if not node_charge.is_zero:
-                build.add("e", coeff * node_charge)
-
             #  Get inner node and its parsing result.
-            inner = work_node.get_inner_node()
             inner_parsed = parsed[id(work_node.get_inner_node())]
 
             #  Content check.
-            if inner.is_molecule() and (len(inner) == 0 or len(inner_parsed) == 0):
+            if len(inner_parsed) == 0:
                 err = _pe.Error(_ml_error.PE_ML_NO_CONTENT,
                                 _msg_id.MSG_PE_ML_NO_CONTENT_DESCRIPTION,
                                 options)
@@ -386,17 +280,6 @@ def parse_ast(expression, root_node, options):
 
             #  Do simplifying.
             _macro_simplify(expression, build, work_node, options)
-
-            #  Save the parsed result.
-            parsed[id(work_node)] = build
-        elif work_node.is_electronic():
-            assert isinstance(work_node, _ast_base.ASTNodeElectronic)
-
-            #  Initialize a new merge utility.
-            build = MergeUtil()
-
-            #  Add electronics.
-            build.add("e", work_node.get_electronic_count())
 
             #  Save the parsed result.
             parsed[id(work_node)] = build
@@ -451,11 +334,6 @@ def parse_ast(expression, root_node, options):
             #  Get the suffix number.
             coeff = work_node.get_suffix_number()
 
-            #  Add electronics.
-            node_charge = work_node.get_suffix_electronic().simplify()
-            if not node_charge.is_zero:
-                build.add("e", coeff * node_charge)
-
             #  Add atoms.
             for atom_symbol in abbr_resolved:
                 build.add(atom_symbol, abbr_resolved[atom_symbol] * coeff)
@@ -472,7 +350,7 @@ def parse_ast(expression, root_node, options):
     root_node_parsed = parsed[id(root_node)]
 
     #  Content check.
-    if root_node.is_molecule() and (len(root_node) == 0 or len(root_node_parsed) == 0):
+    if len(root_node_parsed) == 0:
         err = _pe.Error(_ml_error.PE_ML_NO_CONTENT,
                         _msg_id.MSG_PE_ML_NO_CONTENT_DESCRIPTION,
                         options)
@@ -484,4 +362,4 @@ def parse_ast(expression, root_node, options):
 
         raise err
 
-    return ResultContainer(root_node, status, root_node_parsed.get_data())
+    return root_node_parsed.get_data()

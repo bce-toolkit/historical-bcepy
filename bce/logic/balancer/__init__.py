@@ -4,8 +4,3 @@
 #  Use of this source code is governed by a BSD-style license that can be
 #  found in the license.txt file.
 #
-
-import bce.parser.mexp.test.manual_shell as _ms
-
-if __name__ == "__main__":
-    exit(_ms.run_shell())

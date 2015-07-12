@@ -5,7 +5,5 @@
 #  found in the license.txt file.
 #
 
-import bce.parser.mexp.test.mathml_decompiler as _ms
-
-if __name__ == "__main__":
-    exit(_ms.run_shell())
+OPERATOR_PLUS = 1
+OPERATOR_MINUS = 2

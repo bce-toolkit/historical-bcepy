@@ -5,7 +5,7 @@
 #  found in the license.txt file.
 #
 
-import bce.parser.molecule.ast_base as _ast_base
+import bce.parser.molecule.ast.base as _ast_base
 
 
 def do_bfs(root_node, reverse_order=True):

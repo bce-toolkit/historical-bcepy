@@ -14,9 +14,6 @@ class Option:
     def __init__(self):
         """Initialize the class with suggested options."""
 
-        #  Enable auto-correct function by default.
-        self.__fn_ac = True
-
         #  Disable user-abbreviation-dictionary by default.
         self.__fn_user_abbr = False
 
@@ -29,15 +26,6 @@ class Option:
         #  Set default protected math symbol header.
         self.__math_protected_symbol_hdr = "X"
 
-    def is_auto_correct_enabled(self):
-        """Get whether the auto-correct function is enabled.
-
-        :rtype : bool
-        :return: Return True if it is enabled.
-        """
-
-        return self.__fn_ac
-
     def is_user_abbreviation_dictionary_enabled(self):
         """Get whether the user abbreviation dictionary is enabled.
 
@@ -46,16 +34,6 @@ class Option:
         """
 
         return self.__fn_user_abbr
-
-    def enable_auto_correct(self):
-        """Enable the auto-correct function."""
-
-        self.__fn_ac = True
-
-    def disable_auto_correct(self):
-        """Disable the auto-correct function."""
-
-        self.__fn_ac = False
 
     def enable_user_abbreviation_dictionary(self):
         """Enable user abbreviation dictionary."""

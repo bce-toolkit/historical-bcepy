@@ -13,8 +13,7 @@ _AST_TYPE_HYDRATE_GROUP = 1
 _AST_TYPE_MOLECULE = 2
 _AST_TYPE_ATOM = 3
 _AST_TYPE_PARENTHESIS = 4
-_AST_TYPE_ELECTRONIC = 5
-_AST_TYPE_ABBREVIATION = 6
+_AST_TYPE_ABBREVIATION = 5
 
 
 class _ASTNodeBaseML(_ast.ASTNodeBase):
@@ -68,15 +67,6 @@ class _ASTNodeBaseML(_ast.ASTNodeBase):
 
         return self.get_node_type() == _AST_TYPE_PARENTHESIS
 
-    def is_electronic(self):
-        """Get whether the node is an electronic descriptor.
-
-        :rtype : bool
-        :return: True if so. Otherwise, return False.
-        """
-
-        return self.get_node_type() == _AST_TYPE_ELECTRONIC
-
     def is_abbreviation(self):
         """Get whether the node is an abbreviation descriptor.
 
@@ -126,25 +116,9 @@ class _ASTNodeWithSuffix(_ast.ASTNodeBase):
 
         self.set_property("suffix_number", value)
 
-    def get_suffix_electronic(self):
-        """Get the suffix electronic charge.
-
-        :return: The charge.
-        """
-
-        return self.get_property("suffix_electronic", _math_cst.ZERO)
-
-    def set_suffix_electronic(self, value):
-        """Set the suffix electronic charge.
-
-        :param value: The charge.
-        """
-
-        self.set_property("suffix_electronic", value)
-
 
 class _ASTNodeWithRightParenthesis(_ast.ASTNodeBase):
-    """Protocols for nodes which have to save  the position of its right parenthesis."""
+    """Protocols for nodes which have to save the position of its right parenthesis."""
 
     def set_right_parenthesis_position(self, pos):
         """Set the position of the right parenthesis.
@@ -165,30 +139,8 @@ class _ASTNodeWithRightParenthesis(_ast.ASTNodeBase):
         return self.get_property("right_parenthesis_position", -1)
 
 
-class ASTNodeHydrateGroup(_ASTNodeBaseML, _ASTNodeWithPrefix):
-    """AST node class for hydrate groups."""
-
-    def __init__(self, parent_node=None):
-        """Initialize the node.
-
-        :type parent_node: _ASTNodeBaseML
-        :param parent_node: The parent node.
-        """
-
-        _ASTNodeBaseML.__init__(self, _AST_TYPE_HYDRATE_GROUP, parent_node)
-
-
-class ASTNodeMolecule(_ASTNodeBaseML, _ASTNodeWithPrefix):
-    """AST node class for molecules."""
-
-    def __init__(self, parent_node=None):
-        """Initialize the node.
-
-        :type parent_node: _ASTNodeBaseML
-        :param parent_node: The parent node.
-        """
-
-        _ASTNodeBaseML.__init__(self, _AST_TYPE_MOLECULE, parent_node)
+class _ASTNodeWithStatus(_ast.ASTNodeBase):
+    """Protocols for nodes which have to save status."""
 
     def set_status(self, status_id):
         """Set molecule status.
@@ -207,6 +159,48 @@ class ASTNodeMolecule(_ASTNodeBaseML, _ASTNodeWithPrefix):
         """
 
         return self.get_property("status_id", None)
+
+
+class ASTNodeHydrateGroup(_ASTNodeBaseML, _ASTNodeWithPrefix, _ASTNodeWithStatus):
+    """AST node class for hydrate groups."""
+
+    def __init__(self, parent_node=None):
+        """Initialize the node.
+
+        :type parent_node: _ASTNodeBaseML
+        :param parent_node: The parent node.
+        """
+
+        _ASTNodeBaseML.__init__(self, _AST_TYPE_HYDRATE_GROUP, parent_node)
+
+
+class ASTNodeMolecule(_ASTNodeBaseML, _ASTNodeWithPrefix, _ASTNodeWithStatus):
+    """AST node class for molecules."""
+
+    def __init__(self, parent_node=None):
+        """Initialize the node.
+
+        :type parent_node: _ASTNodeBaseML
+        :param parent_node: The parent node.
+        """
+
+        _ASTNodeBaseML.__init__(self, _AST_TYPE_MOLECULE, parent_node)
+
+    def set_electronic_count(self, value):
+        """Set the electronic count.
+
+        :param value: The new count.
+        """
+
+        self.set_property("electronic_count", value)
+
+    def get_electronic_count(self):
+        """Get the electronic count.
+
+        :return: The count.
+        """
+
+        return self.get_property("electronic_count", _math_cst.ZERO)
 
 
 class ASTNodeAtom(_ASTNodeBaseML, _ASTNodeWithSuffix):
@@ -266,28 +260,6 @@ class ASTNodeParenthesisWrapper(_ASTNodeBaseML, _ASTNodeWithSuffix, _ASTNodeWith
         """
 
         self.set_property("inner_node", new_node)
-
-
-class ASTNodeElectronic(_ASTNodeBaseML):
-    """AST node class for electronic descriptors."""
-
-    def __init__(self, electronic_count, parent_node=None):
-        """Initialize the node.
-
-        :param electronic_count: The electronic charge.
-        :param parent_node: The parent node.
-        """
-
-        _ASTNodeBaseML.__init__(self, _AST_TYPE_ELECTRONIC, parent_node)
-        self.set_property("electronic_count", electronic_count)
-
-    def get_electronic_count(self):
-        """Get the electronic charge count.
-
-        :return: The count.
-        """
-
-        return self.get_property("electronic_count", _math_cst.ZERO)
 
 
 class ASTNodeAbbreviation(_ASTNodeBaseML, _ASTNodeWithSuffix, _ASTNodeWithRightParenthesis):

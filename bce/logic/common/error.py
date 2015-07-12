@@ -6,16 +6,7 @@
 #
 
 import bce.locale.msg_id as _msg_id
-
-#  Add this for PyCharm auto-hinting.
 import bce.option as _opt
-
-LE_WRONG_SIDE = 100
-LE_SIDE_ELIMINATED = 101
-LE_NO_MOLECULE = 102
-LE_ZERO_COEFFICIENT = 103
-LE_MULTIPLE_ANSWER = 104
-LE_CONFLICT_EQUATIONS = 105
 
 
 class LogicError(Exception):
