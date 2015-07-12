@@ -5,16 +5,17 @@
 #  found in the license.txt file.
 #
 
+import sympy as _sympy
+
 import bce.base.stack as _adt_stack
 import bce.parser.common.token as _base_token
 import bce.parser.common.error as _pe
-import bce.parser.mexp.utils as _mexp_utils
+import bce.utils.sympy_utils as _mexp_utils
 import bce.parser.mexp.error as _mexp_errors
 import bce.parser.mexp.function as _mexp_fns
 import bce.parser.mexp.token as _mexp_token
 import bce.locale.msg_id as _msg_id
 import bce.option as _opt
-import sympy as _sympy
 
 
 def calculate_rpn(origin_token_list, rpn_token_list, options):
