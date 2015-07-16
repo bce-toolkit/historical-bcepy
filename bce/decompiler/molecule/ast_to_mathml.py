@@ -157,7 +157,7 @@ def decompile_ast(root_node, options):
 
             el_charge = work_node.get_electronic_count().simplify()
             if not el_charge.is_zero:
-                if len(build) == 0:
+                if len(work_node) == 0:
                     build.append_object(_mathml.SuperComponent(_mathml.TextComponent("e"),
                                                                _decompile_super_electronic(
                                                                    el_charge,
