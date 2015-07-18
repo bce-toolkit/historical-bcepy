@@ -163,7 +163,15 @@ def decompile_ast(root_node, options):
                                                                    el_charge,
                                                                    options)))
                 else:
-                    last_item = build[-1]
+                    #  Find the innermost row component.
+                    innermost = build
+                    while innermost[-1].is_row():
+                        innermost = innermost[-1]
+
+                    #  Fetch the last item.
+                    last_item = innermost[-1]
+
+                    #  Add the electronic.
                     if last_item.is_sub():
                         assert isinstance(last_item, _mathml.SubComponent)
                         last_item = _mathml.SubAndSuperComponent(last_item.get_main_object(),
@@ -172,7 +180,9 @@ def decompile_ast(root_node, options):
                     else:
                         last_item = _mathml.SuperComponent(last_item,
                                                            _decompile_super_electronic(el_charge, options))
-                    build[-1] = last_item
+
+                    #  Save the modified item.
+                    innermost[-1] = last_item
 
             #  Save decompiling result.
             decompiled[id(work_node)] = build
