@@ -11,11 +11,23 @@ import bce.parser.molecule.ast.substitution as _ml_ast_subst
 import bce.parser.molecule.ast.parser as _ml_ast_parser
 import bce.parser.common.error as _pe
 import bce.option as _opt
+import sympy as _sympy
 
 
 class SubstituteError(Exception):
     """Chemical equation substitution error."""
     pass
+
+
+def _check_substituted_mexp(value):
+    """Check the substituted math expression.
+
+    :param value: The value math expression.
+    :raise SubstituteError: Raise this error if the value is invalid.
+    """
+
+    if isinstance(value, _sympy.S.ComplexInfinity.__class__):
+        raise SubstituteError("Divided zero.")
 
 
 def substitute_ce(ce, subst_map, options):
@@ -53,6 +65,7 @@ def substitute_ce(ce, subst_map, options):
 
         #  Get and substitute the coefficient.
         coeff = (item.get_coefficient().subs(subst_map) * ast_root.get_prefix_number()).simplify()
+        _check_substituted_mexp(coeff)
 
         #  Clear the prefix number of the AST.
         ast_root.set_prefix_number(_math_cst.ONE)
@@ -83,6 +96,7 @@ def substitute_ce(ce, subst_map, options):
 
         #  Get and substitute the coefficient.
         coeff = (item.get_coefficient().subs(subst_map) * ast_root.get_prefix_number()).simplify()
+        _check_substituted_mexp(coeff)
 
         #  Clear the prefix number of the AST.
         ast_root.set_prefix_number(_math_cst.ONE)

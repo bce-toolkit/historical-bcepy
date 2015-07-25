@@ -7,11 +7,23 @@
 
 import bce.parser.molecule.ast.base as _ast_base
 import bce.parser.molecule.ast.bfs as _ast_bfs
+import sympy as _sympy
 
 
 class SubstituteError(Exception):
     """Molecule substitution error."""
     pass
+
+
+def _check_substituted_mexp(value):
+    """Check the substituted math expression.
+
+    :param value: The value math expression.
+    :raise SubstituteError: Raise this error if the value is invalid.
+    """
+
+    if isinstance(value, _sympy.S.ComplexInfinity.__class__):
+        raise SubstituteError("Divided zero.")
 
 
 def substitute_ast(root_node, subst_map):
@@ -39,6 +51,7 @@ def substitute_ast(root_node, subst_map):
 
             #  Get and substitute the prefix number.
             pfx = work_node.get_prefix_number().subs(subst_map).simplify()
+            _check_substituted_mexp(pfx)
             if pfx.is_zero:
                 substituted[id(work_node)] = None
                 continue
@@ -111,6 +124,7 @@ def substitute_ast(root_node, subst_map):
 
             #  Get and substitute the prefix number.
             pfx = work_node.get_prefix_number().subs(subst_map).simplify()
+            _check_substituted_mexp(pfx)
             if pfx.is_zero:
                 substituted[id(work_node)] = None
                 continue
@@ -119,7 +133,9 @@ def substitute_ast(root_node, subst_map):
             build_node = _ast_base.ASTNodeMolecule()
 
             #  Substitute the electronic count.
-            build_node.set_electronic_count(work_node.get_electronic_count().subs(subst_map).simplify())
+            substituted_charge = work_node.get_electronic_count().subs(subst_map).simplify()
+            _check_substituted_mexp(substituted_charge)
+            build_node.set_electronic_count(substituted_charge)
 
             #  Set the prefix number.
             build_node.set_prefix_number(pfx)
@@ -152,6 +168,7 @@ def substitute_ast(root_node, subst_map):
 
             #  Get and substitute the suffix number.
             sfx = work_node.get_suffix_number().subs(subst_map).simplify()
+            _check_substituted_mexp(sfx)
 
             #  Eliminate this node if the suffix number is 0.
             if sfx.is_zero:
@@ -171,6 +188,7 @@ def substitute_ast(root_node, subst_map):
 
             #  Get and substitute the suffix number.
             sfx = work_node.get_suffix_number().subs(subst_map).simplify()
+            _check_substituted_mexp(sfx)
 
             #  Get the substituted inner data.
             inner_node = substituted[id(work_node.get_inner_node())]
@@ -208,6 +226,7 @@ def substitute_ast(root_node, subst_map):
 
             #  Get and substitute the suffix number.
             sfx = work_node.get_suffix_number().subs(subst_map).simplify()
+            _check_substituted_mexp(sfx)
 
             #  Eliminate this node if the suffix number is 0.
             if sfx.is_zero:
