@@ -60,11 +60,15 @@ def substitute_ce(ce, subst_map, options):
         except _ml_ast_subst.SubstituteError:
             raise SubstituteError("Can't substitute sub-molecule.")
 
+        #  Substitute the origin coefficient.
+        item_coeff = item.get_coefficient().subs(subst_map).simplify()
+        _check_substituted_mexp(item_coeff)
+
         if ast_root is None:
             continue
 
         #  Get and substitute the coefficient.
-        coeff = (item.get_coefficient().subs(subst_map) * ast_root.get_prefix_number()).simplify()
+        coeff = (item_coeff * ast_root.get_prefix_number()).simplify()
         _check_substituted_mexp(coeff)
 
         #  Clear the prefix number of the AST.
@@ -91,11 +95,15 @@ def substitute_ce(ce, subst_map, options):
         except _ml_ast_subst.SubstituteError:
             raise SubstituteError("Can't substitute sub-molecule.")
 
+        #  Substitute the origin coefficient.
+        item_coeff = item.get_coefficient().subs(subst_map).simplify()
+        _check_substituted_mexp(item_coeff)
+
         if ast_root is None:
             continue
 
         #  Get and substitute the coefficient.
-        coeff = (item.get_coefficient().subs(subst_map) * ast_root.get_prefix_number()).simplify()
+        coeff = (item_coeff * ast_root.get_prefix_number()).simplify()
         _check_substituted_mexp(coeff)
 
         #  Clear the prefix number of the AST.
