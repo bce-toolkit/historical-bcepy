@@ -1,0 +1,6 @@
+To Do
+===================
+
+ - A better algorithm to solve linear equations without changing contemporary behaviors.
+ - Detailed documentations (SDK and user manual).
+ - Automatic unit tests.
