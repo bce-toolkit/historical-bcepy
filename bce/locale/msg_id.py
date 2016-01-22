@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-#  Copyright 2014 - 2015 The BCE Authors. All rights reserved.
+#  Copyright 2014 - 2016 The BCE Authors. All rights reserved.
 #  Use of this source code is governed by a BSD-style license that can be
 #  found in the license.txt file.
 #
@@ -70,7 +70,6 @@ MSG_PE_ML_ATOM_ELIMINATED_DESCRIPTION = "error.parser.molecule.atom_eliminated.d
 MSG_PE_ML_ATOM_ELIMINATED_TB_MESSAGE = "error.parser.molecule.atom_eliminated.message"
 MSG_PE_ML_UNSUPPORTED_ABBREVIATION_DESCRIPTION = "error.parser.molecule.unsupported_abbreviation.description"
 MSG_PE_ML_UNSUPPORTED_ABBREVIATION_TB_MESSAGE = "error.parser.molecule.unsupported_abbreviation.message"
-
 MSG_PE_CE_NO_CONTENT_DESCRIPTION = "error.parser.chemical_equation.no_content.description"
 MSG_PE_CE_NO_CONTENT_OPERATOR_BETWEEN = "error.parser.chemical_equation.no_content.between_operators"
 MSG_PE_CE_NO_CONTENT_OPERATOR_BEFORE = "error.parser.chemical_equation.no_content.before_operator"
@@ -96,3 +95,4 @@ MSG_LE_BCE_SIDE_ELIMINATED_ALL = "error.logic.other.side_eliminated.all"
 MSG_LE_BCE_SIDE_ELIMINATED_LEFT = "error.logic.other.side_eliminated.left"
 MSG_LE_BCE_SIDE_ELIMINATED_RIGHT = "error.logic.other.side_eliminated.right"
 MSG_LE_BCE_CONFLICTED_EQUATIONS = "error.logic.other.conflicted_equations"
+MSG_SH_CONSOLE_INVALID_CHARACTER = "error.shell.console.invalid_character"

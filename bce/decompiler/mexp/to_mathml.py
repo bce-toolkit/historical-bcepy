@@ -2,7 +2,7 @@
 #
 #  This file was copied and modified from SymPy project.
 #
-#  (C) 2014 - 2015 The BCE Authors. All rights reserved.
+#  (C) 2014 - 2016 The BCE Authors. All rights reserved.
 #  (C) SymPy project.
 #
 

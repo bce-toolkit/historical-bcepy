@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-#  Copyright 2014 - 2015 The BCE Authors. All rights reserved.
+#  Copyright 2014 - 2016 The BCE Authors. All rights reserved.
 #  Use of this source code is governed by a BSD-style license that can be
 #  found in the license.txt file.
 #
@@ -98,4 +98,5 @@ MESSAGES = {
     MSG_LE_BCE_SIDE_ELIMINATED_LEFT: "All molecules on the left side of the chemical equation was eliminated.",
     MSG_LE_BCE_SIDE_ELIMINATED_RIGHT: "All molecules on the right side of the chemical equation was eliminated.",
     MSG_LE_BCE_CONFLICTED_EQUATIONS: "This chemical equation is conflicted, and it can't be balanced.",
+    MSG_SH_CONSOLE_INVALID_CHARACTER: "The expression contains at least one invalid character.",
 }

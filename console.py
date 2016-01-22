@@ -1,27 +1,11 @@
+#!/usr/bin/env python
 #
 #  Copyright 2014 - 2016 The BCE Authors. All rights reserved.
 #  Use of this source code is governed by a BSD-style license that can be
 #  found in the license.txt file.
 #
 
-#  Number.
-1
+import bce.shell.console as _console
 
-#  Fraction.
-2/3
-2/x
-x/y
-(a+b)/(c+d)
-
-#  Power.
-2^x
-x^2
-x^(2/3)
-
-#  Square root.
-sqrt(2)
-sqrt(x)
-(x+y)^(1/2)
-
-#  Protected header.
-Xab
+if __name__ == "__main__":
+    _console.main()

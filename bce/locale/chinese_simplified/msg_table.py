@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-#  Copyright 2014 - 2015 The BCE Authors. All rights reserved.
+#  Copyright 2014 - 2016 The BCE Authors. All rights reserved.
 #  Use of this source code is governed by a BSD-style license that can be
 #  found in the license.txt file.
 #
@@ -96,4 +96,5 @@ MESSAGES = {
     MSG_LE_BCE_SIDE_ELIMINATED_LEFT: "该化学方程式的反应物分子均被消去。",
     MSG_LE_BCE_SIDE_ELIMINATED_RIGHT: "该化学方程式的生成物分子均被消去。",
     MSG_LE_BCE_CONFLICTED_EQUATIONS: "该化学方程式中包含冲突，它无法被配平。",
+    MSG_SH_CONSOLE_INVALID_CHARACTER: "表达式中存在非法字符。",
 }
