@@ -7,6 +7,7 @@
 
 import bce.parser.ce.base as _ce_base
 
+#  Reaction directions.
 GSD_UNDETERMINED = 0
 GSD_LEFT_TO_RIGHT = 1
 GSD_RIGHT_TO_LEFT = 2

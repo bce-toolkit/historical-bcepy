@@ -12,11 +12,28 @@ import bce.locale.msg_id as _msg_id
 import bce.utils.sys_locale as _sl
 import bce.utils.test_utils as _tu
 import argparse as _arg
+import signal as _signal
 import sys as _sys
+
+
+# noinspection PyUnusedLocal
+def exit_signal_handler(signal, frame):
+    """The handler for the exit signal.
+
+    :param signal: The signal.
+    :param frame: The calling frame.
+    """
+
+    print("")
+
+    exit(0)
 
 
 def main():
     """Main entry of the BCE console shell."""
+
+    #  Capture SIGINT signal.
+    _signal.signal(_signal.SIGINT, exit_signal_handler)
 
     #  Create an argument parser and do parsing.
     arg_parser = _arg.ArgumentParser(

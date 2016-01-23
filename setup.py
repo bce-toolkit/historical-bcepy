@@ -21,7 +21,6 @@ _setuptools.setup(
     license="BSD",
     keywords=["bce", "chemistry", "chemical", "equation"],
     url="https://github.com/bceportal/bce",
-#    scripts=["console.py"],
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "License :: OSI Approved :: BSD License",

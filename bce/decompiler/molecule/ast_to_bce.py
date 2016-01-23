@@ -9,7 +9,6 @@ import bce.math.constant as _math_cst
 import bce.decompiler.mexp.to_bce as _mexp_decompiler
 import bce.parser.molecule.ast.base as _ml_ast_base
 import bce.parser.molecule.ast.bfs as _ml_ast_bfs
-import bce.parser.molecule.status as _ml_status
 
 
 def _decompile_operand(operand_value):
@@ -140,13 +139,13 @@ def decompile_ast(root_node):
 
     #  Post process.
     post_process = decompiled[id(root_node)]
-    if root_node.get_status() == _ml_status.STATUS_GAS:
+    if root_node.is_gas_status():
         post_process += "(g)"
-    elif root_node.get_status() == _ml_status.STATUS_LIQUID:
+    elif root_node.is_liquid_status():
         post_process += "(l)"
-    elif root_node.get_status() == _ml_status.STATUS_SOLID:
+    elif root_node.is_solid_status():
         post_process += "(s)"
-    elif root_node.get_status() == _ml_status.STATUS_AQUEOUS:
+    elif root_node.is_aqueous_status():
         post_process += "(aq)"
     else:
         pass

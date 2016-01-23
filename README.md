@@ -80,7 +80,7 @@ Equations with multi-solutions are also supported. For example:
 {-Xa+3*Xb}Cu+{8*Xb}HNO3={-Xa+3*Xb}Cu(NO3)2+{-2*Xa+2*Xb}NO+{4*Xa}NO2+{4*Xb}H2O
 ```
 
-In this example, 'Xa' and 'Xb' are variables. You can do subsitution by assigning values to them.
+In this example, 'Xa' and 'Xb' are variables. You can do substitution by assigning values to them.
 
 ### Hydrates
 

@@ -143,6 +143,11 @@ class _ASTNodeWithRightParenthesis(_ast.ASTNodeBase):
 class _ASTNodeWithStatus(_ast.ASTNodeBase):
     """Protocols for nodes which have to save status."""
 
+    def clear_status(self):
+        """Clear molecule status."""
+
+        self.set_status(None)
+
     def set_status(self, status_id):
         """Set molecule status.
 
@@ -160,6 +165,15 @@ class _ASTNodeWithStatus(_ast.ASTNodeBase):
         """
 
         return self.get_property("status_id", None)
+
+    def is_undefined_status(self):
+        """Get whether the substance status is undefined.
+
+        :rtype : bool
+        :return: True if so.
+        """
+
+        return self.get_status() is None
 
     def is_gas_status(self):
         """Get whether the substance status is gas.

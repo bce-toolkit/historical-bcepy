@@ -33,6 +33,20 @@ _FORM_AUTO_CORRECTION = 2
 
 
 def _macro_register_form(expression, origin_form, new_form, options):
+    """Macro of registering new form.
+
+    :type expression: str
+    :type origin_form: int
+    :type new_form: int
+    :type options: _opt.Option
+    :param expression: Origin chemical expression.
+    :param origin_form: The origin form.
+    :param new_form: The new form.
+    :param options: The BCE options.
+    :rtype : int
+    :return: The new form if no conflict exists.
+    """
+
     if origin_form is not None and origin_form != new_form:
         err = _pe.Error(_ce_error.PE_CE_MIXED_FORM,
                         _msg_id.MSG_PE_CE_MIXED_FORM_DESCRIPTION,
