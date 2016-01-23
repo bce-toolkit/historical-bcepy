@@ -6,7 +6,6 @@
 #
 
 import bce.decompiler.molecule.ast_to_bce as _ml_decompiler
-import bce.math.constant as _math_cst
 import bce.parser.ce.base as _ce_base
 
 
@@ -40,6 +39,9 @@ def decompile_ce(ce):
         #  Get the AST root node.
         ast_root = item.get_molecule_ast()
 
+        #  Backup the prefix number.
+        origin_coefficient = ast_root.get_prefix_number()
+
         #  Set the prefix to the balanced coefficient.
         ast_root.set_prefix_number(item.get_coefficient())
 
@@ -47,7 +49,7 @@ def decompile_ce(ce):
         r += _ml_decompiler.decompile_ast(ast_root)
 
         #  Restore the prefix number.
-        ast_root.set_prefix_number(_math_cst.ONE)
+        ast_root.set_prefix_number(origin_coefficient)
 
     #  Insert '='.
     r += "="
@@ -71,6 +73,9 @@ def decompile_ce(ce):
         #  Get the AST root node.
         ast_root = item.get_molecule_ast()
 
+        #  Backup the prefix number.
+        origin_coefficient = ast_root.get_prefix_number()
+
         #  Set the prefix to the balanced coefficient.
         ast_root.set_prefix_number(item.get_coefficient())
 
@@ -78,7 +83,7 @@ def decompile_ce(ce):
         r += _ml_decompiler.decompile_ast(ast_root)
 
         #  Restore the prefix number.
-        ast_root.set_prefix_number(_math_cst.ONE)
+        ast_root.set_prefix_number(origin_coefficient)
 
         #  Switch off the mark.
         r_is_first = False
