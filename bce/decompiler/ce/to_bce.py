@@ -43,7 +43,7 @@ def decompile_ce(ce):
         origin_coefficient = ast_root.get_prefix_number()
 
         #  Set the prefix to the balanced coefficient.
-        ast_root.set_prefix_number(item.get_coefficient())
+        ast_root.set_prefix_number(item.get_coefficient() * origin_coefficient)
 
         #  Decompile the molecule.
         r += _ml_decompiler.decompile_ast(ast_root)
@@ -77,7 +77,7 @@ def decompile_ce(ce):
         origin_coefficient = ast_root.get_prefix_number()
 
         #  Set the prefix to the balanced coefficient.
-        ast_root.set_prefix_number(item.get_coefficient())
+        ast_root.set_prefix_number(item.get_coefficient() * origin_coefficient)
 
         #  Decompile the molecule.
         r += _ml_decompiler.decompile_ast(ast_root)
