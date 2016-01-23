@@ -1,7 +1,7 @@
 BCE Core
 ===================
 
-The main function of this library/program is to **balance chemical equations** and help you **deal with complex chemical equations**. It also contains some unique features.
+The main function of this program is to **balance chemical equations** and help you **deal with complex chemical equations**. It also contains some unique features.
 
 Features
 -------------
