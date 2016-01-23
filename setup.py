@@ -16,9 +16,21 @@ _setuptools.setup(
     name="bce",
     author="The BCE Authors",
     author_email="xiaojsoft@gmail.com",
-    description="A library that can balance chemical equations and help you deal with complex chemical equations.",
+    description="A chemical equation balancer.",
+    long_description="A program that can balance chemical equations and help you deal with complex chemical equations.",
     license="BSD",
     keywords=["bce", "chemistry", "chemical", "equation"],
+    url="https://github.com/bceportal/bce",
+    scripts=["console.py"],
+    classifiers=[
+        "Development Status :: 5 - Production/Stable",
+        "License :: OSI Approved :: BSD License",
+        "Natural Language :: Chinese (Simplified)",
+        "Natural Language :: English",
+        "Operating System :: OS Independent",
+        "Programming Language :: Python",
+        "Topic :: Scientific/Engineering :: Chemistry"
+    ],
 
     #  Version.
     version="%d.%d.%d" % (ver_major, ver_minor, ver_revision),
