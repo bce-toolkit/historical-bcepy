@@ -6,10 +6,11 @@
 #
 
 import bce.locale.msg_id as _msg_id
+import bce.logic.balancer.error as _bce_error
 import bce.logic.balancer.modeling as _bce_model
 import bce.logic.balancer.merge as _bce_merge
+import bce.logic.balancer.direction as _bce_dct
 import bce.logic.common.error as _le
-import bce.logic.balancer.error as _bce_error
 import bce.math.equation as _math_equ
 import bce.parser.ce.base as _ce_base
 import bce.option as _opt
@@ -68,3 +69,7 @@ def balance_chemical_equation(ce, options):
         raise _le.LogicError(_bce_error.LE_BCE_SIDE_ELIMINATED,
                              _msg_id.MSG_LE_BCE_SIDE_ELIMINATED_RIGHT,
                              options)
+
+    #  Guess direction if the form is auto-correction.
+    if is_auto_correction_form and _bce_dct.guess_reaction_direction(ce) == _bce_dct.GSD_RIGHT_TO_LEFT:
+        ce.flip()

@@ -6,6 +6,7 @@
 #
 
 import bce.parser.common.ast as _ast
+import bce.parser.molecule.status as _ml_status
 import bce.math.constant as _math_cst
 
 #  AST node types.
@@ -159,6 +160,42 @@ class _ASTNodeWithStatus(_ast.ASTNodeBase):
         """
 
         return self.get_property("status_id", None)
+
+    def is_gas_status(self):
+        """Get whether the substance status is gas.
+
+        :rtype : bool
+        :return: True if so.
+        """
+
+        return self.get_status() == _ml_status.STATUS_GAS
+
+    def is_liquid_status(self):
+        """Get whether the substance status is liquid.
+
+        :rtype : bool
+        :return: True if so.
+        """
+
+        return self.get_status() == _ml_status.STATUS_LIQUID
+
+    def is_solid_status(self):
+        """Get whether the substance status is solid.
+
+        :rtype : bool
+        :return: True if so.
+        """
+
+        return self.get_status() == _ml_status.STATUS_SOLID
+
+    def is_aqueous_status(self):
+        """Get whether the substance status is aqueous.
+
+        :rtype : bool
+        :return: True if so.
+        """
+
+        return self.get_status() == _ml_status.STATUS_AQUEOUS
 
 
 class ASTNodeHydrateGroup(_ASTNodeBaseML, _ASTNodeWithPrefix, _ASTNodeWithStatus):

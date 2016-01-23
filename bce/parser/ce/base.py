@@ -346,3 +346,10 @@ class ChemicalEquation:
         if use_numer_gcd and numer_gcd is not None:
             for item in all_items:
                 item.set_coefficient((item.get_coefficient() / numer_gcd).simplify())
+
+    def flip(self):
+        """Flip the left items and the right items."""
+
+        tmp = self.__left_items
+        self.__left_items = self.__right_items
+        self.__right_items = tmp

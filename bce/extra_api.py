@@ -37,8 +37,10 @@ def decompile_mexp(value, decompilers, options):
         if dec_id == _api.DECOMPILER_TEXT:
             ret.append(_decompiler_mexp_to_bce.decompile_mexp(value))
         elif dec_id == _api.DECOMPILER_MATHML:
-            ret.append(_decompiler_mexp_to_mathml.decompile_mexp(value,
-                                                                 options.get_protected_math_symbol_header()).to_string())
+            ret.append(_decompiler_mexp_to_mathml.decompile_mexp(
+                value,
+                options.get_protected_math_symbol_header()
+            ).to_string())
         else:
             raise ValueError("Unsupported decompiler ID.")
 

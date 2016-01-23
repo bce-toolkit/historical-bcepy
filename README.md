@@ -135,7 +135,7 @@ If you get several substances and you don't know which are reactants and which a
 NH4Cl+2K2(HgI4)+4KOH=KCl+7KI+3H2O+Hg2NH2OI
 ```
 
-We have to acknowledge that the solving algorithm has some limitations. Currently, the algorithm can't decide the reaction direction. You may have to decide it yourself. For example:
+We have to acknowledge that the solving algorithm has some limitations. Currently, the algorithm can't decide the reaction direction precisely. You may have to decide it yourself. For example:
 
 ```
 >> CH4;HCN;NH3;O2;H2O
@@ -147,6 +147,15 @@ The correction result should be:
 ```
 2CH4+2NH3+3O2=2HCN+6H2O
 ```
+
+To avoid this condition, you can specify the status of each substance by adding "(g)", "(l)", "(s)", "(aq)" at the end to let the program guess the reaction direction. For example.
+
+```
+>> CH4(g);HCN(g);NH3(g);O2(g);H2O(g)
+2CH4(g)+2NH3(g)+3O2(g)=2HCN(g)+6H2O(g)
+```
+
+It is correct now.
 
 Also, the program can't balance the equation if it has multi solutions. The program will report a logic error in such condition. For example:
 
@@ -161,7 +170,7 @@ Description:
 
 Reusable components
 -------------------
-
+ - The whole program can be used as a library.
  - Chemical equation parser (with BCE syntax).
  - Molecule equation parser (with BCE syntax).
  - Electronic expression parser (with BCE syntax).

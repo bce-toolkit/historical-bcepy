@@ -155,6 +155,7 @@ def parse(expression, token_list, options):
             try:
                 #  Tokenize the molecule.
                 ml_token_list = _ml_token.tokenize(token.get_symbol(), options)
+
                 #  Generate the AST.
                 ml_ast_root = _ml_ast_generator.generate_ast(token.get_symbol(), ml_token_list, options)
 
