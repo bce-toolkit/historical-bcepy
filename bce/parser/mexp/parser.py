@@ -320,7 +320,7 @@ def _check_right_operand(expression, token_list, token_id, options):
         raise_err = True
     else:
         next_tok = token_list[token_id + 1]
-        if (not next_tok.is_left_parenthesis()) and not next_tok.is_operand():
+        if not (next_tok.is_left_parenthesis() or next_tok.is_operand() or next_tok.is_function()):
             raise_err = True
 
     if raise_err:
